@@ -17,8 +17,8 @@ export default function Home() {
           >
             By{" "}
             <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
+              src="/Banjo-Kazooie_logo_black.svg"
+              alt="Banjo Kazooie"
               className="dark:invert"
               width={100}
               height={24}
