@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import Modal from "./Modal";
+
 
 export default function Home() {
 
@@ -42,7 +44,7 @@ export default function Home() {
         <p className="ml-auto text-black text-2xl font-semibold">Log In</p>
       </div>
 
-      <div className="relative flex place-items-center">
+      {/* <div className="relative flex place-items-center">
         <a
           href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors hover:border-gray-200 hover:bg-gray-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 flex flex-col justify-center items-center"
@@ -62,7 +64,9 @@ export default function Home() {
               priority
             />
         </a>
-      </div>
+      </div> */}
+
+      <Modal/>
 
       <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
         <a
