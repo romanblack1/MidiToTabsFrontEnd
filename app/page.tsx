@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import Modal from "./Modal";
+import Head from 'next/head'
+import LoginForm from '../components/login-form'
 
 
 export default function Home() {
@@ -65,7 +67,11 @@ export default function Home() {
             />
         </a>
       </div> */}
-
+      <div>
+        <main>
+          <LoginForm/>
+        </main>
+      </div>
       <Modal/>
 
       <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
