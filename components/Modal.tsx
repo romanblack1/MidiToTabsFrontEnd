@@ -18,7 +18,7 @@ export default function Modal() {
   return (
     <>
       <button
-        className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors hover:border-gray-200 hover:bg-gray-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 flex flex-col justify-center items-center"
+        className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors hover:border-gray-200 hover:bg-gray-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 flex flex-col justify-center items-center dark:bg-slate-600"
         style={{ width: "500px", height: "200px" }}
         onClick={toggleModal}
       >
