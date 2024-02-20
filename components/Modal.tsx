@@ -41,7 +41,7 @@ export default function Modal() {
             <div className="flex flex-row">
               <button
                 className={
-                  "rounded-lg px-5 py-3 transition-colors " +
+                  "rounded-lg px-5 py-3 transition-colors mr-3 " +
                   (highlightedButton === "default"
                     ? "bg-gray-400"
                     : "bg-gray-300")
@@ -52,13 +52,12 @@ export default function Modal() {
               </button>
               <button
                 className={
-                  "rounded-lg px-5 py-3 transition-colors "  +
+                  "rounded-lg px-5 py-3 transition-colors mr-3 " +
                   (highlightedButton === "dropD"
                     ? "bg-gray-400"
                     : "bg-gray-300")
                 }
                 onClick={() => handleButtonClick("dropD")}
-                style={{ marginLeft: "10px", marginRight: "10px" }}
               >
                 Drop D
               </button>
