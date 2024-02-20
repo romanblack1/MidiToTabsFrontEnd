@@ -4,6 +4,7 @@ import Image from "next/image";
 
 export default function Modal() {
   const [modal, setModal] = useState(false);
+  const [file, setFile] = useState<File | undefined>();
 
   const toggleModal = () => {
     setModal(!modal);
@@ -15,10 +16,26 @@ export default function Modal() {
     setHighlightedButton(button);
   };
 
+  async function handleOnSubmit(e: React.SyntheticEvent) {
+    e.preventDefault();
+
+    file ? console.log("name", file) : console.log("missing midi file");
+
+    //api call
+  }
+
+  async function handleOnChange(e: React.FormEvent<HTMLInputElement>) {
+    e.preventDefault();
+
+    const target = e.target as HTMLInputElement & { files: FileList };
+
+    setFile(target.files[0]);
+  }
+
   return (
     <>
       <button
-        className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors hover:border-gray-200 hover:bg-gray-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 flex flex-col justify-center items-center dark:bg-slate-600"
+        className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors hover:border-gray-200 hover:bg-gray-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 flex flex-col justify-center items-center"
         style={{ width: "500px", height: "200px" }}
         onClick={toggleModal}
       >
@@ -38,10 +55,10 @@ export default function Modal() {
           <div className="modal-content">
             <h2 className="title-modal">Create Guitar Tab</h2>
             <p>Tuning: </p>
-            <div className="flex flex-row">
+            <div className="flex flex-row justify-center">
               <button
                 className={
-                  "rounded-lg px-5 py-3 transition-colors mr-3 " +
+                  "rounded-lg px-5 py-3 transition-colors " +
                   (highlightedButton === "default"
                     ? "bg-gray-400"
                     : "bg-gray-300")
@@ -52,12 +69,13 @@ export default function Modal() {
               </button>
               <button
                 className={
-                  "rounded-lg px-5 py-3 transition-colors mr-3 " +
+                  "rounded-lg px-5 py-3 transition-colors " +
                   (highlightedButton === "dropD"
                     ? "bg-gray-400"
                     : "bg-gray-300")
                 }
                 onClick={() => handleButtonClick("dropD")}
+                style={{ marginLeft: "10px", marginRight: "10px" }}
               >
                 Drop D
               </button>
@@ -74,7 +92,7 @@ export default function Modal() {
               </button>
             </div>
 
-            <div className="mt-3 flex flex-row justify-between">
+            <div className="mt-3 mb-3 flex flex-row justify-between">
               <p>Capo on fret:</p>
               <select>
                 <option value="0">No Capo</option>
@@ -90,11 +108,20 @@ export default function Modal() {
               </select>
             </div>
 
-            <div className="flex justify-center">
-              <button className="rounded-lg bg-gray-300 px-5 py-2 transition-colors hover:border-gray-200 hover:bg-gray-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
+            <form>
+              <input
+                type="file"
+                name="midi_file"
+                accept=".mid"
+                onChange={handleOnChange}
+              />
+              <button
+                className="rounded-lg bg-gray-300 px-5 py-2 transition-colors hover:border-gray-200 hover:bg-gray-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+                onClick={handleOnSubmit}
+              >
                 Submit
               </button>
-            </div>
+            </form>
 
             <button className="close-modal" onClick={toggleModal}>
               X
