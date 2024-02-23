@@ -21,7 +21,18 @@ export default function Modal() {
 
     file ? console.log("name", file) : console.log("missing midi file");
 
+    const midiFileFormData = new FormData();
+    if(!file){
+      console.error("No MIDI file provided");
+    }else{
+      midiFileFormData.append('midi', file);
+    }
     //api call
+    const res = await fetch("http://localhost:3000/api", {
+      method: "POST",
+      body: midiFileFormData,
+    });
+    alert(await res.text());
   }
 
   async function handleOnChange(e: React.FormEvent<HTMLInputElement>) {
