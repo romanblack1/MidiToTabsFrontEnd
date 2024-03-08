@@ -46,7 +46,7 @@ export default function NavBar() {
       </p>
       <Link
         className="ml-auto text-black text-2xl font-semibold dark:text-slate-800"
-        href="/page2"
+        href="/login"
       >
         Login
       </Link>
