@@ -68,7 +68,7 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
       >
         <h2 className={`mb-3 text-2xl font-semibold`}>Upload a Midi File</h2>
         <Image
-          src="/icons8-upload-64.png"
+          src="/upload_icon.png"
           alt="Upload Midi File Here"
           className="dark:invert"
           width={80}
