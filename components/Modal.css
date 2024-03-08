@@ -47,3 +47,9 @@ body.active-modal {
     font-size: 1.5rem; /* Equivalent to text-2xl */
     font-weight: 600; /* Equivalent to font-semibold */
 }
+
+.sub-title-modal {
+    margin-bottom: 0.75rem; /* Equivalent to mb-3 */
+    font-size: 1rem;
+    font-weight: 400; 
+}

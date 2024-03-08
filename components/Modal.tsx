@@ -23,7 +23,10 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
   async function handleOnSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
 
-    file ? console.log("name", file) : console.log("missing midi file");
+    if (!file) {
+      alert("Must Submit A Midi File (.mid)");
+      return;
+    }
 
     const midiFileFormData = new FormData();
     if (!file) {
@@ -42,7 +45,6 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
     });
     setTab(await res.text());
     setModal(false);
-    // alert(await res.text());
   }
 
   const handleCapoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -66,11 +68,11 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
       >
         <h2 className={`mb-3 text-2xl font-semibold`}>Upload a Midi File</h2>
         <Image
-          src="/Banjo-Kazooie_logo_black.svg"
-          alt="Banjo Kazooie"
+          src="/icons8-upload-64.png"
+          alt="Upload Midi File Here"
           className="dark:invert"
-          width={100}
-          height={24}
+          width={80}
+          height={80}
           priority
         />
       </button>
@@ -78,7 +80,9 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
         <div className="modal">
           <div onClick={toggleModal} className="overlay"></div>
           <div className="modal-content">
-            <h2 className="title-modal">Create Guitar Tab</h2>
+            <span className="title-modal">Create Guitar Tab </span>
+            <span className="sub-title-modal">(.mid files only)</span>
+            <br></br>
             <p>Tuning: </p>
             <div className="flex flex-row justify-center">
               <button
@@ -93,9 +97,9 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
               <button
                 className={
                   "rounded-lg px-5 py-3 transition-colors " +
-                  (tuningOffset === "-1" ? "bg-gray-400" : "bg-gray-300")
+                  (tuningOffset === "-2" ? "bg-gray-400" : "bg-gray-300")
                 }
-                onClick={() => handleButtonClick("-1")}
+                onClick={() => handleButtonClick("-2")}
                 style={{ marginLeft: "10px", marginRight: "10px" }}
               >
                 Drop D
@@ -103,9 +107,9 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
               <button
                 className={
                   "rounded-lg px-5 py-3 transition-colors " +
-                  (tuningOffset === "-2" ? "bg-gray-400" : "bg-gray-300")
+                  (tuningOffset === "-4" ? "bg-gray-400" : "bg-gray-300")
                 }
-                onClick={() => handleButtonClick("-2")}
+                onClick={() => handleButtonClick("-4")}
               >
                 Drop C
               </button>
@@ -133,6 +137,7 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
                 name="midi_file"
                 accept=".mid"
                 onChange={handleFileChange}
+                required
               />
               <button
                 className="rounded-lg bg-gray-300 px-5 py-2 transition-colors hover:border-gray-200 hover:bg-gray-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"

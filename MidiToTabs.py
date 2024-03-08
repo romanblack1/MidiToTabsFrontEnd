@@ -44,15 +44,15 @@ class Tab:
 
 
 def create_guitar_index(tuning_offset, capo_offset):
-    e_string = (64 + capo_offset + tuning_offset, 81 + tuning_offset)
+    e_string = (64 + capo_offset, 81)
     b_string = (59 + capo_offset, 76)
     g_string = (55 + capo_offset, 72)
     d_string = (50 + capo_offset, 67)
     a_string = (45 + capo_offset, 62)
-    low_e_string = (40, 57)
+    low_e_string = (40 + capo_offset + tuning_offset, 57 + tuning_offset)
 
     guitar_index = {}
-    for note_num in range(40, 82):
+    for note_num in range(40 + capo_offset + tuning_offset, 82):
         string_fret_combo = []
         if e_string[0] <= note_num <= e_string[1]:
             string_fret_combo.append(GuitarNote("e", 0, note_num - e_string[0]))
@@ -81,7 +81,7 @@ def clear_directory(path):
 
 
 # Splits a given midi song into midi files containing each
-# track separately, saves them in the given dest
+# track separately, saves them in the given destination
 def song_to_tracks(song: MidiFile, dest: str):
     # Clearing Destination of Midi Files
     clear_directory(dest)
@@ -179,8 +179,8 @@ def create_notes(single_track, time_info_dict):
 # objects) into a singular tuple with the on note first and
 # the off note second
 def pair_up_notes(notes_on, notes_off):
-    notes_on = sorted(notes_on, key=lambda x: x.name)
-    notes_off = sorted(notes_off, key=lambda x: x.name)
+    notes_on = sorted(notes_on, key=lambda note: note.name)
+    notes_off = sorted(notes_off, key=lambda note: note.name)
     paired_notes = []
     if len(notes_on) == len(notes_off):
         for x in range(len(notes_on)):
@@ -265,13 +265,14 @@ def optimize_simultaneous_notes(simultaneous_notes, guitar_index):
     return best_solution
 
 
-def translate_notes(paired_notes, guitar_index):
+def translate_notes(paired_notes, guitar_index, tuning_offset, capo_offset):
     guitar_note_list = []
     paired_notes = sorted(paired_notes, key=lambda x: x.note_on.time)
     paired_note_index = 0
     while paired_note_index < len(paired_notes):
         current_note = paired_notes[paired_note_index]
-        if current_note.note_on.note not in range(40, 82):
+        if current_note.note_on.note not in range(40 + tuning_offset + capo_offset, 82):
+            paired_note_index += 1
             continue
 
         i = 1
@@ -298,7 +299,7 @@ def translate_notes(paired_notes, guitar_index):
 def print_tab_line(guitar_strings):
     for guitar_string in guitar_strings:
         print(guitar_string)
-    print("\n")
+    print()
 
 
 def print_tab(tab, time_sig_numerator, time_sig_denominator):
@@ -384,7 +385,7 @@ def main(midi_file_path, tuning_offset, capo_offset):
     # Pair up the notes_on and notes_off that we collected
     paired_notes = pair_up_notes(notes_on, notes_off)
 
-    guitar_tab = translate_notes(paired_notes, guitar_index)
+    guitar_tab = translate_notes(paired_notes, guitar_index, tuning_offset, capo_offset)
 
     print_tab(guitar_tab, time_info_dict["time_sig_numerator"], time_info_dict["time_sig_denominator"])
 
