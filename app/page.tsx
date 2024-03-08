@@ -11,14 +11,20 @@ export default function Home() {
       <NavBar />
       {tab ? (
         <div
-          className="text-xs mb-4 dark:bg-slate-500"
-          style={{ fontFamily: "Courier New, Courier, monospace" }}
+          className="text-xs mb-4 flex justify-center dark:bg-slate-500"
+          style={{
+            fontFamily: "Courier New, Courier, monospace",
+            width: "1000px",
+          }}
         >
-          {tab}
+          <pre>
+            <br />
+            {tab}
+          </pre>
         </div>
       ) : undefined}
       <Modal setTab={setTab} />
-      <div className="preserve-whitespace min-height:20px"> </div>
+      <div className="preserve-whitespace min-height:20px">{<br />} </div>
     </main>
   );
 }
