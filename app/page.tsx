@@ -1,14 +1,24 @@
 "use client";
-
+import { useState } from "react";
 import Modal from "../components/Modal";
 import NavBar from "../components/NavBar";
 
 export default function Home() {
+  const [tab, setTab] = useState<string | undefined>(undefined);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between dark:bg-slate-700">
       <NavBar />
-      <Modal />
-      <div></div>
+      {tab ? (
+        <div
+          className="text-xs mb-4 dark:bg-slate-500"
+          style={{ fontFamily: "Courier New, Courier, monospace" }}
+        >
+          {tab}
+        </div>
+      ) : undefined}
+      <Modal setTab={setTab} />
+      <div className="preserve-whitespace min-height:20px"> </div>
     </main>
   );
 }

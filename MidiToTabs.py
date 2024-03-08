@@ -1,4 +1,3 @@
-import math
 import sys
 import os
 import mido
@@ -39,29 +38,46 @@ class Tab:
     guitar_note_list: list
 
 
+# def print_note_range(paired_notes):
+#     paired_notes = sorted(paired_notes, key=lambda x: x[0].note)
+#     print("Min Note: " + str(paired_notes[0][0].note) + ". Max Note: " + str(paired_notes[-1][0].note))
+
+
+def create_guitar_index(tuning_offset, capo_offset):
+    e_string = (64 + capo_offset + tuning_offset, 81 + tuning_offset)
+    b_string = (59 + capo_offset, 76)
+    g_string = (55 + capo_offset, 72)
+    d_string = (50 + capo_offset, 67)
+    a_string = (45 + capo_offset, 62)
+    low_e_string = (40, 57)
+
+    guitar_index = {}
+    for note_num in range(40, 82):
+        string_fret_combo = []
+        if e_string[0] <= note_num <= e_string[1]:
+            string_fret_combo.append(GuitarNote("e", 0, note_num - e_string[0]))
+        if b_string[0] <= note_num <= b_string[1]:
+            string_fret_combo.append(GuitarNote("b", 1, note_num - b_string[0]))
+        if g_string[0] <= note_num <= g_string[1]:
+            string_fret_combo.append(GuitarNote("g", 2, note_num - g_string[0]))
+        if d_string[0] <= note_num <= d_string[1]:
+            string_fret_combo.append(GuitarNote("d", 3, note_num - d_string[0]))
+        if a_string[0] <= note_num <= a_string[1]:
+            string_fret_combo.append(GuitarNote("a", 4, note_num - a_string[0]))
+        if low_e_string[0] <= note_num <= low_e_string[1]:
+            string_fret_combo.append(GuitarNote("E", 5, note_num - low_e_string[0]))
+
+        guitar_index[note_num] = string_fret_combo
+
+    return guitar_index
+
+
 # Clears the given directory from path of all files
 def clear_directory(path):
     for filename in os.listdir(path):
         file_path = os.path.join(path, filename)
         if os.path.isfile(file_path):
             os.remove(file_path)
-
-
-def print_note_range(paired_notes):
-    paired_notes = sorted(paired_notes, key=lambda x: x[0].note)
-    print("Min Note: " + str(paired_notes[0][0].note) + ". Max Note: " + str(paired_notes[-1][0].note))
-
-
-# Translates from MIDI note number (0-128) to name with octave and number
-def note_number_to_name(note_number):
-    # Define a list of note names
-    note_names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
-    # Calculate the octave and note index
-    octave = note_number // 12
-    note_index = note_number % 12
-    # Get the note name based on the note index
-    note_name = note_names[note_index]
-    return f"{note_name}{octave}"
 
 
 # Splits a given midi song into midi files containing each
@@ -99,6 +115,18 @@ def song_to_tracks(song: MidiFile, dest: str):
             temp_song.tracks.append(important_meta_messages + channels_dict[channel][0])
             temp_song.ticks_per_beat = 480
             temp_song.save(f'SplitTrackDepot\\{channel}.mid')
+
+
+# Translates from MIDI note number (0-128) to name with octave and number
+def note_number_to_name(note_number):
+    # Define a list of note names
+    note_names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+    # Calculate the octave and note index
+    octave = note_number // 12
+    note_index = note_number % 12
+    # Get the note name based on the note index
+    note_name = note_names[note_index]
+    return f"{note_name}{octave}"
 
 
 # Create notes from the given track
@@ -159,33 +187,21 @@ def pair_up_notes(notes_on, notes_off):
             paired_notes.append(PairedNote(notes_on[x], notes_off[x]))
     return paired_notes
 
-def create_guitar_index():
-    e_string = (64, 81)
-    b_string = (59, 76)
-    g_string = (55, 72)
-    d_string = (50, 67)
-    a_string = (45, 62)
-    low_e_string = (40, 57)
 
-    guitar_index = {}
-    for note_num in range(40, 82):
-        string_fret_combo = []
-        if e_string[0] <= note_num <= e_string[1]:
-            string_fret_combo.append(GuitarNote("e", 0, note_num - e_string[0]))
-        if b_string[0] <= note_num <= b_string[1]:
-            string_fret_combo.append(GuitarNote("b", 1, note_num - b_string[0]))
-        if g_string[0] <= note_num <= g_string[1]:
-            string_fret_combo.append(GuitarNote("g", 2, note_num - g_string[0]))
-        if d_string[0] <= note_num <= d_string[1]:
-            string_fret_combo.append(GuitarNote("d", 3, note_num - d_string[0]))
-        if a_string[0] <= note_num <= a_string[1]:
-            string_fret_combo.append(GuitarNote("a", 4, note_num - a_string[0]))
-        if low_e_string[0] <= note_num <= low_e_string[1]:
-            string_fret_combo.append(GuitarNote("E", 5, note_num - low_e_string[0]))
+def pick_min_string_index(solutions):
+    min_solution = solutions[0]
 
-        guitar_index[note_num] = string_fret_combo
+    min_avg_string_index = 6
+    for solution in solutions:
+        sum_string_index = 0
+        for dict_val in solution.values():
+            sum_string_index += dict_val.string_index
+        avg_string_index = sum_string_index / len(solution)
+        if avg_string_index < min_avg_string_index:
+            min_solution = solution
+            min_avg_string_index = avg_string_index
 
-    return guitar_index
+    return min_solution
 
 
 def remove_unplayable_bars(solutions):
@@ -208,22 +224,6 @@ def remove_unplayable_bars(solutions):
                 break
 
     return vetted_solutions
-
-
-def pick_min_string_index(solutions):
-    min_solution = solutions[0]
-
-    min_avg_string_index = 6
-    for solution in solutions:
-        sum_string_index = 0
-        for dict_val in solution.values():
-            sum_string_index += dict_val.string_index
-        avg_string_index = sum_string_index / len(solution)
-        if avg_string_index < min_avg_string_index:
-            min_solution = solution
-            min_avg_string_index = avg_string_index
-
-    return min_solution
 
 
 def optimize_simultaneous_notes(simultaneous_notes, guitar_index):
@@ -295,6 +295,12 @@ def translate_notes(paired_notes, guitar_index):
     return Tab(guitar_note_list)
 
 
+def print_tab_line(guitar_strings):
+    for guitar_string in guitar_strings:
+        print(guitar_string)
+    print("\n")
+
+
 def print_tab(tab, time_sig_numerator, time_sig_denominator):
     guitar_strings = ["e|", "b|", "g|", "d|", "a|", "E|"]
 
@@ -331,14 +337,8 @@ def print_tab(tab, time_sig_numerator, time_sig_denominator):
         print_tab_line(guitar_strings)
 
 
-def print_tab_line(guitar_strings):
-    for guitar_string in guitar_strings:
-        print(guitar_string)
-    print()
-
-
-def main(midi_file_path):
-    guitar_index = create_guitar_index()
+def main(midi_file_path, tuning_offset, capo_offset):
+    guitar_index = create_guitar_index(tuning_offset, capo_offset)
 
     # Read in our given midi file
     midi_song = MidiFile(midi_file_path, clip=True)
@@ -377,7 +377,7 @@ def main(midi_file_path):
 
     # We are going to analyze one track within our song
     # 0 for death cab, 0 for beatles, 3 for blinding lights
-    single_track = MidiFile('SplitTrackDepot/0.mid', clip=True).tracks[0]
+    single_track = MidiFile('SplitTrackDepot/3.mid', clip=True).tracks[0]
 
     notes_on, notes_off = create_notes(single_track, time_info_dict)
 
@@ -392,7 +392,7 @@ def main(midi_file_path):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 4:
         print("Usage: python MidiToTabs.py <path_to_midi_file>")
         sys.exit(1)
-    main(sys.argv[1])
+    main(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
