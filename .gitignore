@@ -3,6 +3,12 @@
 # keys and private info
 .env
 
+# vs code stuff
+.vs
+
+# jetbrains
+.idea
+
 # dependencies
 /node_modules
 /.pnp
