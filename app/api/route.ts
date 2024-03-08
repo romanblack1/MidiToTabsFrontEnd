@@ -14,10 +14,10 @@ if (!supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Function to execute Python script
-function runPythonScript(midiFilePath: string): Promise<string> {
+function runPythonScript(midiFilePath: string, tuningOffset: string, capoOffset: string): Promise<string> {
     return new Promise((resolve, reject) => {
         // Spawn a new process to execute the Python script
-        const pythonProcess = spawn('python', ['MidiToTabs.py', midiFilePath]);
+        const pythonProcess = spawn('python', ['MidiToTabs.py', midiFilePath, tuningOffset, capoOffset]);
 
         // Initialize an empty string to store the output data
         let outputData = '';
@@ -55,7 +55,9 @@ export async function POST(request: Request): Promise<Response> {
     try {
         // Assuming the MIDI file is uploaded as form-data with key 'midi'
         const formData = await request.formData();
-        const midiFile = formData.get('midi');
+        const midiFile = formData.get('midiFile');
+        const tuningOffsetEntry = formData.get('tuningOffset');
+        const capoOffsetEntry = formData.get('capoOffset');
 
         if (!midiFile || !(midiFile instanceof File)) {
             return new Response("No MIDI file found in the request", { status: 400 });
@@ -70,8 +72,11 @@ export async function POST(request: Request): Promise<Response> {
         // Write the Buffer to the specified file path
         fs.writeFileSync(midiFilePath, Buffer.from(buffer));
 
+        const tuningOffset = tuningOffsetEntry as string;
+        const capoOffset = capoOffsetEntry as string;
+
         // Process MIDI file using Python script
-        const generatedText = await runPythonScript(midiFilePath);
+        const generatedText = await runPythonScript(midiFilePath, tuningOffset, capoOffset);
 
         // Store generated text in Supabase database
         const { data, error } = await supabase.from('tabs').insert([{ tab: generatedText }]);
@@ -80,7 +85,7 @@ export async function POST(request: Request): Promise<Response> {
             return new Response(error.message, { status: 500 });
         }
 
-        return new Response("Text generated from MIDI file has been stored in Supabase database", { status: 200 });
+        return new Response(generatedText, { status: 200 });
     } catch (error) {
         console.error(error);
         if (error instanceof Error) {

@@ -1,19 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, SetStateAction } from "react";
 import "./Modal.css";
 import Image from "next/image";
 
-export default function Modal() {
+interface ModalProps {
+  setTab: React.Dispatch<React.SetStateAction<string | undefined>>;
+}
+
+export default function Modal({ setTab }: ModalProps): JSX.Element {
   const [modal, setModal] = useState(false);
   const [file, setFile] = useState<File | undefined>();
+  const [tuningOffset, setTuningOffset] = useState("0");
+  const [capoOffset, setCapoOffset] = useState("0");
 
   const toggleModal = () => {
     setModal(!modal);
   };
 
-  const [highlightedButton, setHighlightedButton] = useState("default");
-
   const handleButtonClick = (button: string) => {
-    setHighlightedButton(button);
+    setTuningOffset(button);
   };
 
   async function handleOnSubmit(e: React.SyntheticEvent) {
@@ -22,20 +26,30 @@ export default function Modal() {
     file ? console.log("name", file) : console.log("missing midi file");
 
     const midiFileFormData = new FormData();
-    if(!file){
+    if (!file) {
       console.error("No MIDI file provided");
-    }else{
-      midiFileFormData.append('midi', file);
+    } else {
+      // Append midiFile to FormData
+      midiFileFormData.append("midiFile", file);
+      // Append tuningOffset and capoOffset to FormData
+      midiFileFormData.append("tuningOffset", tuningOffset);
+      midiFileFormData.append("capoOffset", capoOffset);
     }
     //api call
     const res = await fetch("http://localhost:3000/api", {
       method: "POST",
       body: midiFileFormData,
     });
-    alert(await res.text());
+    setTab(await res.text());
+    setModal(false);
+    // alert(await res.text());
   }
 
-  async function handleOnChange(e: React.FormEvent<HTMLInputElement>) {
+  const handleCapoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCapoOffset(e.target.value); // Update capoOffset state with selected value
+  };
+
+  async function handleFileChange(e: React.FormEvent<HTMLInputElement>) {
     e.preventDefault();
 
     const target = e.target as HTMLInputElement & { files: FileList };
@@ -70,22 +84,18 @@ export default function Modal() {
               <button
                 className={
                   "rounded-lg px-5 py-3 transition-colors " +
-                  (highlightedButton === "default"
-                    ? "bg-gray-400"
-                    : "bg-gray-300")
+                  (tuningOffset === "0" ? "bg-gray-400" : "bg-gray-300")
                 }
-                onClick={() => handleButtonClick("default")}
+                onClick={() => handleButtonClick("0")}
               >
                 Default
               </button>
               <button
                 className={
                   "rounded-lg px-5 py-3 transition-colors " +
-                  (highlightedButton === "dropD"
-                    ? "bg-gray-400"
-                    : "bg-gray-300")
+                  (tuningOffset === "-1" ? "bg-gray-400" : "bg-gray-300")
                 }
-                onClick={() => handleButtonClick("dropD")}
+                onClick={() => handleButtonClick("-1")}
                 style={{ marginLeft: "10px", marginRight: "10px" }}
               >
                 Drop D
@@ -93,11 +103,9 @@ export default function Modal() {
               <button
                 className={
                   "rounded-lg px-5 py-3 transition-colors " +
-                  (highlightedButton === "dropC"
-                    ? "bg-gray-400"
-                    : "bg-gray-300")
+                  (tuningOffset === "-2" ? "bg-gray-400" : "bg-gray-300")
                 }
-                onClick={() => handleButtonClick("dropC")}
+                onClick={() => handleButtonClick("-2")}
               >
                 Drop C
               </button>
@@ -105,7 +113,7 @@ export default function Modal() {
 
             <div className="mt-3 mb-3 flex flex-row justify-between">
               <p>Capo on fret:</p>
-              <select>
+              <select value={capoOffset} onChange={handleCapoChange}>
                 <option value="0">No Capo</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -124,7 +132,7 @@ export default function Modal() {
                 type="file"
                 name="midi_file"
                 accept=".mid"
-                onChange={handleOnChange}
+                onChange={handleFileChange}
               />
               <button
                 className="rounded-lg bg-gray-300 px-5 py-2 transition-colors hover:border-gray-200 hover:bg-gray-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
