@@ -34,7 +34,7 @@ export default function NavBar() {
         {tabSearch.length > 0 && (
           <div className="absolute top-8 p-1 flex flex-col bg-slate-500">
             {tabSearch.map((s) => (
-              <span>{s}</span>
+              <span key={s}>{s}</span>
             ))}
           </div>
         )}
