@@ -14,10 +14,10 @@ if (!supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Function to execute Python script
-function runPythonScript(midiFilePath: string, tuningOffset: string, capoOffset: string): Promise<string> {
+function runPythonScript(midiFilePath: string, trackNumber: string, tuningOffset: string, capoOffset: string): Promise<string> {
     return new Promise((resolve, reject) => {
         // Spawn a new process to execute the Python script
-        const pythonProcess = spawn('python', ['MidiToTabs.py', midiFilePath, tuningOffset, capoOffset]);
+        const pythonProcess = spawn('python', ['MidiToTabs.py', midiFilePath, trackNumber, tuningOffset, capoOffset]);
 
         // Initialize an empty string to store the output data
         let outputData = '';
@@ -76,7 +76,7 @@ export async function POST(request: Request): Promise<Response> {
         const capoOffset = capoOffsetEntry as string;
 
         // Process MIDI file using Python script
-        const generatedText = await runPythonScript(midiFilePath, tuningOffset, capoOffset);
+        const generatedText = await runPythonScript(midiFilePath, "0", tuningOffset, capoOffset);
 
         // Store generated text in Supabase database
         const { data, error } = await supabase.from('tabs').insert([{ tab: generatedText }]);

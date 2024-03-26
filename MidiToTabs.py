@@ -43,6 +43,7 @@ class Tab:
 #     print("Min Note: " + str(paired_notes[0][0].note) + ". Max Note: " + str(paired_notes[-1][0].note))
 
 
+# Given tuning and capo offsets, create a dictionary of notes to fret-string combos
 def create_guitar_index(tuning_offset, capo_offset):
     e_string = (64 + capo_offset, 81)
     b_string = (59 + capo_offset, 76)
@@ -72,6 +73,40 @@ def create_guitar_index(tuning_offset, capo_offset):
     return guitar_index
 
 
+# Captures important info from midi song
+def create_time_info_dict(midi_song):
+    # Figure out the midi tick to seconds ratio
+    time_info_dict = {}
+    tempo = 500000
+    time_sig_numerator = 4
+    time_sig_denominator = 4
+    found_tempo = False
+    found_numerator = False
+    for message in midi_song.tracks[0]:
+        if type(message) == mido.midifiles.meta.MetaMessage:
+            if message.type == 'set_tempo':
+                tempo = message.tempo
+                found_tempo = True
+                if found_tempo and found_numerator:
+                    break
+            if message.type == 'time_signature':
+                time_sig_numerator = message.numerator
+                time_sig_denominator = message.denominator
+                found_numerator = True
+                if found_tempo and found_numerator:
+                    break
+    ticks_to_seconds_ratio = tempo / 1000000 / midi_song.ticks_per_beat
+    seconds_per_beat = midi_song.ticks_per_beat * ticks_to_seconds_ratio
+    time_info_dict["tempos"] = []
+    time_info_dict["ticks_per_beat"] = midi_song.ticks_per_beat
+    time_info_dict["time_sig_numerator"] = time_sig_numerator
+    time_info_dict["time_sig_denominator"] = time_sig_denominator
+    time_info_dict["ticks_to_seconds_ratio"] = ticks_to_seconds_ratio
+    time_info_dict["seconds_per_beat"] = seconds_per_beat
+
+    return time_info_dict
+
+
 # Clears the given directory from path of all files
 def clear_directory(path):
     for filename in os.listdir(path):
@@ -94,7 +129,7 @@ def song_to_tracks(song: MidiFile, dest: str):
         for message in song.tracks[track_index]:
             total_time += message.time
 
-            # hard coding place to find important meta messages, todo: fix later after working on more midi files
+            # hard coding place to find important meta messages,
             # add specific meta messages to all tracks so that they play the correct tempo/key/etc.
             if track_index == 0 and type(message) == mido.midifiles.meta.MetaMessage:
                 if message.type == 'key_signature' or \
@@ -188,6 +223,7 @@ def pair_up_notes(notes_on, notes_off):
     return paired_notes
 
 
+# Pick the solution with the lowest avg string value
 def pick_min_string_index(solutions):
     min_solution = solutions[0]
 
@@ -204,6 +240,7 @@ def pick_min_string_index(solutions):
     return min_solution
 
 
+# Checks for bars that are unplayable and removes them from the solution set
 def remove_unplayable_bars(solutions):
     vetted_solutions = []
 
@@ -226,6 +263,7 @@ def remove_unplayable_bars(solutions):
     return vetted_solutions
 
 
+# Given notes to be played simultaneously, chooses the best fingering for them to be played
 def optimize_simultaneous_notes(simultaneous_notes, guitar_index):
     problem = Problem()
 
@@ -265,6 +303,7 @@ def optimize_simultaneous_notes(simultaneous_notes, guitar_index):
     return best_solution
 
 
+# Returns a Tab that has the chosed way to play all notes
 def translate_notes(paired_notes, guitar_index, tuning_offset, capo_offset):
     guitar_note_list = []
     paired_notes = sorted(paired_notes, key=lambda x: x.note_on.time)
@@ -296,12 +335,14 @@ def translate_notes(paired_notes, guitar_index, tuning_offset, capo_offset):
     return Tab(guitar_note_list)
 
 
+# Print one line of the tab
 def print_tab_line(guitar_strings):
     for guitar_string in guitar_strings:
         print(guitar_string)
     print()
 
 
+# Given the Tab with the chosen notes, creates the human-readable tab and prints it
 def print_tab(tab, time_sig_numerator, time_sig_denominator):
     guitar_strings = ["e|", "b|", "g|", "d|", "a|", "E|"]
 
@@ -338,62 +379,43 @@ def print_tab(tab, time_sig_numerator, time_sig_denominator):
         print_tab_line(guitar_strings)
 
 
-def main(midi_file_path, tuning_offset, capo_offset):
+def main(midi_file, track_num, tuning_offset, capo_offset):
+    # Create guitar index with note keys -- fret-string values
     guitar_index = create_guitar_index(tuning_offset, capo_offset)
 
-    # Read in our given midi file
-    midi_song = MidiFile(midi_file_path, clip=True)
+    # Read in the song
+    midi_song = MidiFile(midi_file, clip=True)
 
-    # Figure out the midi tick to seconds ratio
-    time_info_dict = {}
-    tempo = 500000
-    time_sig_numerator = 4
-    time_sig_denominator = 4
-    found_tempo = False
-    found_numerator = False
-    for message in midi_song.tracks[0]:
-        if type(message) == mido.midifiles.meta.MetaMessage:
-            if message.type == 'set_tempo':
-                tempo = message.tempo
-                found_tempo = True
-                if found_tempo and found_numerator:
-                    break
-            if message.type == 'time_signature':
-                time_sig_numerator = message.numerator
-                time_sig_denominator = message.denominator
-                found_numerator = True
-                if found_tempo and found_numerator:
-                    break
-    ticks_to_seconds_ratio = tempo / 1000000 / midi_song.ticks_per_beat
-    seconds_per_beat = midi_song.ticks_per_beat * ticks_to_seconds_ratio
-    time_info_dict["tempos"] = []
-    time_info_dict["ticks_per_beat"] = midi_song.ticks_per_beat
-    time_info_dict["time_sig_numerator"] = time_sig_numerator
-    time_info_dict["time_sig_denominator"] = time_sig_denominator
-    time_info_dict["ticks_to_seconds_ratio"] = ticks_to_seconds_ratio
-    time_info_dict["seconds_per_beat"] = seconds_per_beat
+    # Capture important info from song
+    time_info_dict = create_time_info_dict(midi_song)
 
-    # Split into tracks
+    # Split song into tracks for single track translation
     song_to_tracks(midi_song, 'SplitTrackDepot')
+    track_file = 'SplitTrackDepot/' + str(track_num) + '.mid'
+    single_track = MidiFile(track_file, clip=True).tracks[0]
 
-    # We are going to analyze one track within our song
-    # 0 for death cab, 0 for beatles, 3 for blinding lights
-    single_track = MidiFile('SplitTrackDepot/3.mid', clip=True).tracks[0]
-
+    # Read from the single track and put notes into structures
     notes_on, notes_off = create_notes(single_track, time_info_dict)
-
-    # Pair up the notes_on and notes_off that we collected
     paired_notes = pair_up_notes(notes_on, notes_off)
 
+    # Create the list of guitar notes translated from the paired notes we read from the track-file
     guitar_tab = translate_notes(paired_notes, guitar_index, tuning_offset, capo_offset)
 
+    # Print the generated tab into expected readable output
     print_tab(guitar_tab, time_info_dict["time_sig_numerator"], time_info_dict["time_sig_denominator"])
 
-    return 0
+    return
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        print("Usage: python MidiToTabs.py <path_to_midi_file>")
-        sys.exit(1)
-    main(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
+    if len(sys.argv) == 2:
+        main(sys.argv[1], 0, 0, 0)
+    if len(sys.argv) == 3:
+        main(sys.argv[1], int(sys.argv[2]), 0, 0)
+    elif len(sys.argv) == 5:
+        main(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]))
+
+    else:
+        print("Usages:")
+        print("python3 MidiToTabs.py <path_to_midi_file>")
+        print("python3 MidiToTabs.py <path_to_midi_file> <tuning offset> <capo fret>")
