@@ -58,13 +58,13 @@ def create_guitar_index(tuning_offset, capo_offset):
         if e_string[0] <= note_num <= e_string[1]:
             string_fret_combo.append(GuitarNote("e", 0, note_num - e_string[0]))
         if b_string[0] <= note_num <= b_string[1]:
-            string_fret_combo.append(GuitarNote("b", 1, note_num - b_string[0]))
+            string_fret_combo.append(GuitarNote("B", 1, note_num - b_string[0]))
         if g_string[0] <= note_num <= g_string[1]:
-            string_fret_combo.append(GuitarNote("g", 2, note_num - g_string[0]))
+            string_fret_combo.append(GuitarNote("G", 2, note_num - g_string[0]))
         if d_string[0] <= note_num <= d_string[1]:
-            string_fret_combo.append(GuitarNote("d", 3, note_num - d_string[0]))
+            string_fret_combo.append(GuitarNote("D", 3, note_num - d_string[0]))
         if a_string[0] <= note_num <= a_string[1]:
-            string_fret_combo.append(GuitarNote("a", 4, note_num - a_string[0]))
+            string_fret_combo.append(GuitarNote("A", 4, note_num - a_string[0]))
         if low_e_string[0] <= note_num <= low_e_string[1]:
             string_fret_combo.append(GuitarNote("E", 5, note_num - low_e_string[0]))
 
@@ -344,7 +344,7 @@ def print_tab_line(guitar_strings):
 
 # Given the Tab with the chosen notes, creates the human-readable tab and prints it
 def print_tab(tab, time_sig_numerator, time_sig_denominator):
-    guitar_strings = ["e|", "b|", "g|", "d|", "a|", "E|"]
+    guitar_strings = ["e|", "B|", "G|", "D|", "A|", "E|"]
 
     quarter_beats_per_measure = time_sig_numerator * time_sig_denominator
     last_beat_index = tab.guitar_note_list[-1].quarter_beat_index
@@ -373,7 +373,7 @@ def print_tab(tab, time_sig_numerator, time_sig_denominator):
                 guitar_strings[guitar_string_index] += "|"
         if time_index > 0 and time_index % (quarter_beats_per_measure * 8) == 0:
             print_tab_line(guitar_strings)
-            guitar_strings = ["e|", "b|", "g|", "d|", "a|", "E|"]
+            guitar_strings = ["e|", "B|", "G|", "D|", "A|", "E|"]
 
     if len(guitar_strings[0]) > 3:
         print_tab_line(guitar_strings)
