@@ -65,7 +65,7 @@ export async function POST(request: Request): Promise<Response> {
 
         // Save the MIDI file to a temporary location (if needed)
         // For example:
-        const midiFilePath = '../MidiToTabsFrontEnd/temp_files/file.mid';
+        const midiFilePath = './temp_files/file.mid';
         // Convert the File object to a Buffer
         const buffer = await midiFile.arrayBuffer();
 
@@ -96,7 +96,3 @@ export async function POST(request: Request): Promise<Response> {
     }
 }
 
-// GET request handler
-export async function GET(request: Request): Promise<Response> {
-    return new Response("Hello, API working");
-}

@@ -18,7 +18,7 @@ export default function RegisterCard() {
           loginFormData.append("username", values.username)
           loginFormData.append("password", values.password)
           //api call
-          const res = await fetch("http://localhost:3000/api/register", {
+          const res = await fetch("/api/register", {
             method: "POST",
             body: loginFormData,
           });
