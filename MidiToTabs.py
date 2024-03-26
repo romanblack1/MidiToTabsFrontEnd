@@ -417,5 +417,6 @@ if __name__ == '__main__':
 
     else:
         print("Usages:")
-        print("python3 MidiToTabs.py <path_to_midi_file>")
-        print("python3 MidiToTabs.py <path_to_midi_file> <tuning offset> <capo fret>")
+        print("python3 MidiToTabs.py <midi_file>")
+        print("python3 MidiToTabs.py <midi_file> <track number>")
+        print("python3 MidiToTabs.py <midi_file> <track number> <tuning offset> <capo fret>")
