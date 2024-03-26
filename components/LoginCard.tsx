@@ -1,11 +1,10 @@
 import { Formik, Field, Form } from "formik";
 import Link from "next/link";
 
-
 export default function LoginCard() {
   return (
     <div className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors flex flex-col justify-center items-center dark:bg-slate-600">
-      <h1 className="font-bold text-3xl mb-7 dark:bg-slate-600">Login</h1>
+      <h1 className="font-bold text-3xl mb-7">Login</h1>
 
       <Formik
         initialValues={{
@@ -15,8 +14,8 @@ export default function LoginCard() {
         onSubmit={async (values, actions) => {
           console.log({ values, actions });
           const loginFormData = new FormData();
-          loginFormData.append("username", values.username)
-          loginFormData.append("password", values.password)
+          loginFormData.append("username", values.username);
+          loginFormData.append("password", values.password);
           //api call
           const res = await fetch("/api/login", {
             method: "POST",
@@ -40,14 +39,11 @@ export default function LoginCard() {
             name="password"
             placeholder="Password"
           />
-          <button
-            className="text-2xl font-bold dark:text-slate-500"
-            type="submit"
-          >
+          <button className="text-2xl font-bold" type="submit">
             Submit
           </button>
           <Link
-            className="mr-auto text-black text-2xl font-semibold dark:text-slate-200"
+            className="mr-auto text-black text-2xl font-semibold dark:text-slate-500"
             href="/register"
           >
             Register
