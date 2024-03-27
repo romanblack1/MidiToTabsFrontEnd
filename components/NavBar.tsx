@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function NavBar() {
   const tabs = ["1", "3", "5", "6", "7", "11", "12", "18", "aaaaa", "aabaa"];
@@ -15,11 +16,8 @@ export default function NavBar() {
 
   return (
     <div className="bg-gray-200 w-full h-12 flex items-center px-6 dark:bg-slate-600">
-      <Link
-        className="mr-auto text-black text-2xl font-semibold dark:text-slate-800"
-        href="/"
-      >
-        Logo
+      <Link className="mr-auto" href="/">
+        <Image src="/logo.png" alt="logo" width={40} height={40} priority />
       </Link>
       <p className="flex-grow text-center"> </p>
       <form>
