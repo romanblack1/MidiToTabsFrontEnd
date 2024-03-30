@@ -1,10 +1,23 @@
 import { Formik, Field, Form } from "formik";
 import Link from "next/link";
+import Image from "next/image";
+import "./LoginRegisterCard.css";
 
 export default function LoginCard() {
   return (
-    <div className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors flex flex-col justify-center items-center dark:bg-slate-600">
+    <div className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors flex flex-col justify-center items-center dark:bg-slate-600 relative">
       <h1 className="font-bold text-3xl mb-7">Login</h1>
+      <div className="return-home">
+        <Link href="/">
+          <Image
+            src="/back_icon.png"
+            alt="back"
+            width={40}
+            height={40}
+            priority
+          />
+        </Link>
+      </div>
 
       <Formik
         initialValues={{

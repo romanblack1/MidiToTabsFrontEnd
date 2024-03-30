@@ -1,12 +1,23 @@
 import { Formik, Field, Form } from "formik";
 import Link from "next/link";
-
+import Image from "next/image";
+import "./LoginRegisterCard.css";
 
 export default function RegisterCard() {
   return (
-    <div className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors flex flex-col justify-center items-center dark:bg-slate-600">
+    <div className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors flex flex-col justify-center items-center dark:bg-slate-600 relative">
       <h1 className="font-bold text-3xl mb-7 dark:bg-slate-600">Register</h1>
-
+      <div className="return-home">
+        <Link className="mr-auto" href="/">
+          <Image
+            src="/back_icon.png"
+            alt="back"
+            width={40}
+            height={40}
+            priority
+          />
+        </Link>
+      </div>
       <Formik
         initialValues={{
           username: "",
@@ -15,8 +26,8 @@ export default function RegisterCard() {
         onSubmit={async (values, actions) => {
           console.log({ values, actions });
           const loginFormData = new FormData();
-          loginFormData.append("username", values.username)
-          loginFormData.append("password", values.password)
+          loginFormData.append("username", values.username);
+          loginFormData.append("password", values.password);
           //api call
           const res = await fetch("/api/register", {
             method: "POST",
