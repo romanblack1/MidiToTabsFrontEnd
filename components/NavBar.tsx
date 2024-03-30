@@ -19,7 +19,7 @@ export default function NavBar() {
       <Link className="mr-auto" href="/">
         <Image src="/logo.png" alt="logo" width={40} height={40} priority />
       </Link>
-      <p className="flex-grow text-center"> </p>
+      {/* <p className="flex-grow text-center"> </p>
       <form>
         <div className="relative">
           <input
@@ -36,12 +36,12 @@ export default function NavBar() {
             ))}
           </div>
         )}
-      </form>
-      <p className="flex-grow text-center"> </p>
+      </form> */}
+      {/* <p className="flex-grow text-center"> </p>
       <p className="flex-grow text-center"> </p>
       <p className="flex-grow text-center text-black text-2xl font-semibold dark:text-slate-800">
         Browse
-      </p>
+      </p> */}
       <Link
         className="ml-auto text-black text-2xl font-semibold dark:text-slate-800"
         href="/login"
