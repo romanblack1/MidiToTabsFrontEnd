@@ -52,6 +52,9 @@ def create_guitar_index(tuning_offset, capo_offset):
     a_string = (45 + capo_offset, 62)
     low_e_string = (40 + capo_offset + tuning_offset, 57 + tuning_offset)
 
+    note_names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+    low_e_string_name = note_names[((40 + tuning_offset) % 12)]
+
     guitar_index = {}
     for note_num in range(40 + capo_offset + tuning_offset, 82):
         string_fret_combo = []
@@ -66,7 +69,7 @@ def create_guitar_index(tuning_offset, capo_offset):
         if a_string[0] <= note_num <= a_string[1]:
             string_fret_combo.append(GuitarNote("A", 4, note_num - a_string[0]))
         if low_e_string[0] <= note_num <= low_e_string[1]:
-            string_fret_combo.append(GuitarNote("E", 5, note_num - low_e_string[0]))
+            string_fret_combo.append(GuitarNote(low_e_string_name, 5, note_num - low_e_string[0]))
 
         guitar_index[note_num] = string_fret_combo
 
@@ -301,6 +304,10 @@ def optimize_simultaneous_notes(simultaneous_notes, guitar_index):
             problem.addConstraint(string_constraint_function, (variables[i], variables[j]))
 
     solutions = problem.getSolutions()
+    if len(solutions) == 0:
+        simultaneous_notes.pop(1)
+        return optimize_simultaneous_notes(simultaneous_notes, guitar_index)
+
     best_solution = pick_min_string_index(solutions)
 
     solutions = remove_unplayable_bars(solutions)
@@ -348,8 +355,14 @@ def print_tab_line(guitar_strings):
 
 
 # Given the Tab with the chosen notes, creates the human-readable tab and prints it
-def print_tab(tab, time_sig_numerator, time_sig_denominator):
-    guitar_strings = ["e|", "B|", "G|", "D|", "A|", "E|"]
+def print_tab(tab, time_sig_numerator, time_sig_denominator, tuning_offset):
+    note_names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+    low_e_string_name = note_names[((40 + tuning_offset) % 12)]
+
+    empty_guitar_strings = ["e|", "B|", "G|", "D|", "A|", low_e_string_name + "|"] \
+        if len(low_e_string_name) == 1 \
+        else ["e |", "B |", "G |", "D |", "A |", low_e_string_name + "|"]
+    guitar_strings = empty_guitar_strings.copy()
 
     quarter_beats_per_measure = time_sig_numerator * time_sig_denominator
     last_beat_index = tab.guitar_note_list[-1].quarter_beat_index
@@ -378,7 +391,7 @@ def print_tab(tab, time_sig_numerator, time_sig_denominator):
                 guitar_strings[guitar_string_index] += "|"
         if time_index > 0 and time_index % (quarter_beats_per_measure * 8) == 0:
             print_tab_line(guitar_strings)
-            guitar_strings = ["e|", "B|", "G|", "D|", "A|", "E|"]
+            guitar_strings = empty_guitar_strings.copy()
 
     if len(guitar_strings[0]) > 3:
         print_tab_line(guitar_strings)
@@ -410,7 +423,7 @@ def main(midi_file, channel_num, tuning_offset, capo_offset):
     guitar_tab = translate_notes(paired_notes, guitar_index)
 
     # Print the generated tab into expected readable output
-    print_tab(guitar_tab, time_info_dict["time_sig_numerator"], time_info_dict["time_sig_denominator"])
+    print_tab(guitar_tab, time_info_dict["time_sig_numerator"], time_info_dict["time_sig_denominator"], tuning_offset)
 
     return
 
