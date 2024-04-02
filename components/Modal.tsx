@@ -11,6 +11,7 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
   const [file, setFile] = useState<File | undefined>();
   const [tuningOffset, setTuningOffset] = useState("0");
   const [capoOffset, setCapoOffset] = useState("0");
+  const [channelSelected, setChannelSelected] = useState("-1");
 
   const toggleModal = () => {
     setModal(!modal);
@@ -34,7 +35,8 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
     } else {
       // Append midiFile to FormData
       midiFileFormData.append("midiFile", file);
-      // Append tuningOffset and capoOffset to FormData
+      // Append trackSelected, tuningOffset, and capoOffset to FormData
+      midiFileFormData.append("channelSelected", channelSelected);
       midiFileFormData.append("tuningOffset", tuningOffset);
       midiFileFormData.append("capoOffset", capoOffset);
     }
@@ -49,6 +51,10 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
 
   const handleCapoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCapoOffset(e.target.value); // Update capoOffset state with selected value
+  };
+
+  const handleChannelSelected = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setChannelSelected(e.target.value); // Update channelSelected state with selected value
   };
 
   async function handleFileChange(e: React.FormEvent<HTMLInputElement>) {
@@ -128,6 +134,29 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
                 <option value="7">7</option>
                 <option value="8">8</option>
                 <option value="9">9</option>
+              </select>
+            </div>
+
+            <div className="mt-3 mb-3 flex flex-row justify-between">
+              <p>Track to Translate:</p>
+              <select value={channelSelected} onChange={handleChannelSelected}>
+                <option value="-1">Detect</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
               </select>
             </div>
 

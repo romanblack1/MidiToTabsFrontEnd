@@ -14,10 +14,10 @@ if (!supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Function to execute Python script
-function runPythonScript(midiFilePath: string, trackNumber: string, tuningOffset: string, capoOffset: string): Promise<string> {
+function runPythonScript(midiFilePath: string, channelNumber: string, tuningOffset: string, capoOffset: string): Promise<string> {
     return new Promise((resolve, reject) => {
         // Spawn a new process to execute the Python script
-        const pythonProcess = spawn('python', ['MidiToTabs.py', midiFilePath, trackNumber, tuningOffset, capoOffset]);
+        const pythonProcess = spawn('python', ['MidiToTabs.py', midiFilePath, channelNumber, tuningOffset, capoOffset]);
 
         // Initialize an empty string to store the output data
         let outputData = '';
@@ -56,6 +56,7 @@ export async function POST(request: Request): Promise<Response> {
         // Assuming the MIDI file is uploaded as form-data with key 'midi'
         const formData = await request.formData();
         const midiFile = formData.get('midiFile');
+        const channelSelectedEntry = formData.get('channelSelected');
         const tuningOffsetEntry = formData.get('tuningOffset');
         const capoOffsetEntry = formData.get('capoOffset');
 
@@ -72,11 +73,12 @@ export async function POST(request: Request): Promise<Response> {
         // Write the Buffer to the specified file path
         fs.writeFileSync(midiFilePath, Buffer.from(buffer));
 
+        const channelSelected = channelSelectedEntry as string;
         const tuningOffset = tuningOffsetEntry as string;
         const capoOffset = capoOffsetEntry as string;
 
         // Process MIDI file using Python script
-        const generatedText = await runPythonScript(midiFilePath, "0", tuningOffset, capoOffset);
+        const generatedText = await runPythonScript(midiFilePath, channelSelected, tuningOffset, capoOffset);
 
         // Store generated text in Supabase database
         const { data, error } = await supabase.from('tabs').insert([{ tab: generatedText }]);

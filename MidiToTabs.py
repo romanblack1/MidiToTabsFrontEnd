@@ -70,7 +70,7 @@ def create_guitar_index(tuning_offset, capo_offset):
 
         guitar_index[note_num] = string_fret_combo
 
-    return guitar_index
+    return guitar_index, (40 + capo_offset + tuning_offset, 81)
 
 
 # Captures important info from midi song
@@ -117,11 +117,11 @@ def clear_directory(path):
 
 # Splits a given midi song into midi files containing each
 # track separately, saves them in the given destination
-def song_to_tracks(song: MidiFile, dest: str):
+def song_to_tracks(song: MidiFile, destination_dir: str, ticks_per_beat):
     # Clearing Destination of Midi Files
-    clear_directory(dest)
+    clear_directory(destination_dir)
 
-    # Splitting Tracks and Writing Files to dest
+    # Splitting Tracks and Writing Files to destination_dir
     important_meta_messages = []
     channels_dict = {}
     for track_index in range(len(song.tracks)):
@@ -143,13 +143,17 @@ def song_to_tracks(song: MidiFile, dest: str):
                     message.time = total_time - channels_dict[message.channel][1]
                     channels_dict[message.channel][0].append(message)
                     channels_dict[message.channel] = (channels_dict[message.channel][0], total_time)
-                except:
+                except Exception as e:
                     print(message)
-        for channel in channels_dict:
-            temp_song = MidiFile()
-            temp_song.tracks.append(important_meta_messages + channels_dict[channel][0])
-            temp_song.ticks_per_beat = 480
-            temp_song.save(f'SplitTrackDepot\\{channel}.mid')
+                    print(e)
+    for channel in channels_dict:
+        temp_song = MidiFile()
+        temp_song.tracks.append(important_meta_messages + channels_dict[channel][0])
+        temp_song.ticks_per_beat = ticks_per_beat
+        temp_song.save(f'SplitTrackDepot\\{channel}.mid')
+
+    longest_channel = max(channels_dict, key=lambda channel_index: len(channels_dict[channel_index][0]))
+    return longest_channel
 
 
 # Translates from MIDI note number (0-128) to name with octave and number
@@ -165,7 +169,7 @@ def note_number_to_name(note_number):
 
 
 # Create notes from the given track
-def create_notes(single_track, time_info_dict):
+def create_notes(single_track, time_info_dict, guitar_range):
     notes_on = []
     notes_off = []
     time_counter = 0
@@ -196,11 +200,15 @@ def create_notes(single_track, time_info_dict):
                 time_info_dict["tempos"].append((message.tempo, message.time))
             continue
         if message.type == "note_on":
+            if message.note not in range(*guitar_range):
+                continue
             temp_note = Note(note_number_to_name(message.note), message.note,
                              True, message.velocity, message.channel, time_seconds,
                              1 + round(4*time_seconds/time_info_dict["seconds_per_beat"]))
             notes_on.append(temp_note)
         elif message.type == "note_off":
+            if message.note not in range(*guitar_range):
+                continue
             temp_note = Note(note_number_to_name(message.note), message.note,
                              False, message.velocity, message.channel, time_seconds,
                              1 + round(4*time_seconds/time_info_dict["seconds_per_beat"]))
@@ -303,16 +311,13 @@ def optimize_simultaneous_notes(simultaneous_notes, guitar_index):
     return best_solution
 
 
-# Returns a Tab that has the chosed way to play all notes
-def translate_notes(paired_notes, guitar_index, tuning_offset, capo_offset):
+# Returns a Tab that has the chosen way to play all notes
+def translate_notes(paired_notes, guitar_index):
     guitar_note_list = []
     paired_notes = sorted(paired_notes, key=lambda x: x.note_on.time)
     paired_note_index = 0
     while paired_note_index < len(paired_notes):
         current_note = paired_notes[paired_note_index]
-        if current_note.note_on.note not in range(40 + tuning_offset + capo_offset, 82):
-            paired_note_index += 1
-            continue
 
         i = 1
         current_quarter_beat_index = current_note.note_on.quarter_beat_index
@@ -379,9 +384,9 @@ def print_tab(tab, time_sig_numerator, time_sig_denominator):
         print_tab_line(guitar_strings)
 
 
-def main(midi_file, track_num, tuning_offset, capo_offset):
+def main(midi_file, channel_num, tuning_offset, capo_offset):
     # Create guitar index with note keys -- fret-string values
-    guitar_index = create_guitar_index(tuning_offset, capo_offset)
+    guitar_index, guitar_range = create_guitar_index(tuning_offset, capo_offset)
 
     # Read in the song
     midi_song = MidiFile(midi_file, clip=True)
@@ -390,16 +395,19 @@ def main(midi_file, track_num, tuning_offset, capo_offset):
     time_info_dict = create_time_info_dict(midi_song)
 
     # Split song into tracks for single track translation
-    song_to_tracks(midi_song, 'SplitTrackDepot')
-    track_file = 'SplitTrackDepot/' + str(track_num) + '.mid'
+    longest_channel = song_to_tracks(midi_song, 'SplitTrackDepot', time_info_dict["ticks_per_beat"])
+    if channel_num == -1:
+        channel_num = longest_channel
+
+    track_file = 'SplitTrackDepot/' + str(channel_num) + '.mid'
     single_track = MidiFile(track_file, clip=True).tracks[0]
 
     # Read from the single track and put notes into structures
-    notes_on, notes_off = create_notes(single_track, time_info_dict)
+    notes_on, notes_off = create_notes(single_track, time_info_dict, guitar_range)
     paired_notes = pair_up_notes(notes_on, notes_off)
 
     # Create the list of guitar notes translated from the paired notes we read from the track-file
-    guitar_tab = translate_notes(paired_notes, guitar_index, tuning_offset, capo_offset)
+    guitar_tab = translate_notes(paired_notes, guitar_index)
 
     # Print the generated tab into expected readable output
     print_tab(guitar_tab, time_info_dict["time_sig_numerator"], time_info_dict["time_sig_denominator"])
@@ -409,8 +417,8 @@ def main(midi_file, track_num, tuning_offset, capo_offset):
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
-        main(sys.argv[1], 0, 0, 0)
-    if len(sys.argv) == 3:
+        main(sys.argv[1], -1, 0, 0)
+    elif len(sys.argv) == 3:
         main(sys.argv[1], int(sys.argv[2]), 0, 0)
     elif len(sys.argv) == 5:
         main(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]))
@@ -418,5 +426,5 @@ if __name__ == '__main__':
     else:
         print("Usages:")
         print("python3 MidiToTabs.py <midi_file>")
-        print("python3 MidiToTabs.py <midi_file> <track number>")
-        print("python3 MidiToTabs.py <midi_file> <track number> <tuning offset> <capo fret>")
+        print("python3 MidiToTabs.py <midi_file> <channel_number>")
+        print("python3 MidiToTabs.py <midi_file> <channel_number> <tuning_offset> <capo_fret>")
