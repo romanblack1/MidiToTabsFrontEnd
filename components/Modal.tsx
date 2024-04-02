@@ -4,9 +4,10 @@ import Image from "next/image";
 
 interface ModalProps {
   setTab: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setTitle: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
-export default function Modal({ setTab }: ModalProps): JSX.Element {
+export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
   const [modal, setModal] = useState(false);
   const [file, setFile] = useState<File | undefined>();
   const [tuningOffset, setTuningOffset] = useState("0");
@@ -35,7 +36,7 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
     } else {
       // Append midiFile to FormData
       midiFileFormData.append("midiFile", file);
-      // Append trackSelected, tuningOffset, and capoOffset to FormData
+      // Append channelSelected, tuningOffset, and capoOffset to FormData
       midiFileFormData.append("channelSelected", channelSelected);
       midiFileFormData.append("tuningOffset", tuningOffset);
       midiFileFormData.append("capoOffset", capoOffset);
@@ -45,6 +46,8 @@ export default function Modal({ setTab }: ModalProps): JSX.Element {
       method: "POST",
       body: midiFileFormData,
     });
+    let title_string = file.name.replace(".mid", "");
+    setTitle(title_string.replace("_", " "));
     setTab(await res.text());
     setModal(false);
   }
