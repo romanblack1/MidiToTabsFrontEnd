@@ -49,5 +49,5 @@ package-lock.json
 package.json
 
 
-/SplitTrackDepot/*
-/temp_files/*
+SplitTrackDepot/*.mid
+temp_files/file.mid
