@@ -141,7 +141,7 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
             </div>
 
             <div className="mt-3 mb-3 flex flex-row justify-between">
-              <p>Track to Translate:</p>
+              <p>Channel to Translate:</p>
               <select value={channelSelected} onChange={handleChannelSelected}>
                 <option value="-1">Detect</option>
                 <option value="0">0</option>
