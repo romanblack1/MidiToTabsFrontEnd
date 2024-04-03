@@ -64,9 +64,15 @@ export async function POST(request: Request): Promise<Response> {
             return new Response("No MIDI file found in the request", { status: 400 });
         }
 
+        // Create temp_file directory
+        if (!fs.existsSync("/tmp/")) {
+            // If it doesn't exist, create it
+            fs.mkdirSync("/tmp/", { recursive: true });
+        }
+
         // Save the MIDI file to a temporary location (if needed)
         // For example:
-        const midiFilePath = './temp_files/file.mid';
+        const midiFilePath = '/tmp/file.mid';
         // Convert the File object to a Buffer
         const buffer = await midiFile.arrayBuffer();
 
