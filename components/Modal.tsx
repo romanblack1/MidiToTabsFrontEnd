@@ -47,7 +47,7 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
       body: midiFileFormData,
     });
     let title_string = file.name.replace(".mid", "");
-    setTitle(title_string.replace("_", " "));
+    setTitle(title_string.replace(/_/g, " "));
     setTab(await res.text());
     setModal(false);
   }
