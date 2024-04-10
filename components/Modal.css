@@ -53,3 +53,9 @@ body.active-modal {
     font-size: 1rem;
     font-weight: 400; 
 }
+
+@media (prefers-color-scheme: dark) {
+    .modal-content {
+        background-color: #334155; /* Dark mode background color */
+    }
+}

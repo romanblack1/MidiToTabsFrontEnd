@@ -71,7 +71,7 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
   return (
     <>
       <button
-        className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors hover:border-gray-200 hover:bg-gray-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 flex flex-col justify-center items-center"
+        className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors hover:border-gray-200 hover:bg-gray-400 dark:border-neutral-700 dark:bg-neutral-800/30 flex flex-col justify-center items-center"
         style={{ width: "500px", height: "200px" }}
         onClick={toggleModal}
       >
@@ -88,7 +88,7 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
       {modal && (
         <div className="modal">
           <div onClick={toggleModal} className="overlay"></div>
-          <div className="modal-content">
+          <div className="modal-content dark:border-neutral-700 dark:bg-neutral-800/30">
             <span className="title-modal">Create Guitar Tab </span>
             <span className="sub-title-modal">(.mid files only)</span>
             <br></br>
@@ -97,7 +97,9 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
               <button
                 className={
                   "rounded-lg px-5 py-3 transition-colors " +
-                  (tuningOffset === "0" ? "bg-gray-400" : "bg-gray-300")
+                  (tuningOffset === "0"
+                    ? "bg-gray-400 dark:bg-gray-600"
+                    : "bg-gray-300 dark:bg-gray-400")
                 }
                 onClick={() => handleButtonClick("0")}
               >
@@ -106,7 +108,9 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
               <button
                 className={
                   "rounded-lg px-5 py-3 transition-colors " +
-                  (tuningOffset === "-2" ? "bg-gray-400" : "bg-gray-300")
+                  (tuningOffset === "-2"
+                    ? "bg-gray-400 dark:bg-gray-600"
+                    : "bg-gray-300 dark:bg-gray-400")
                 }
                 onClick={() => handleButtonClick("-2")}
                 style={{ marginLeft: "10px", marginRight: "10px" }}
@@ -116,7 +120,9 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
               <button
                 className={
                   "rounded-lg px-5 py-3 transition-colors " +
-                  (tuningOffset === "-4" ? "bg-gray-400" : "bg-gray-300")
+                  (tuningOffset === "-4"
+                    ? "bg-gray-400 dark:bg-gray-600"
+                    : "bg-gray-300 dark:bg-gray-400")
                 }
                 onClick={() => handleButtonClick("-4")}
               >
@@ -126,7 +132,11 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
 
             <div className="mt-3 mb-3 flex flex-row justify-between">
               <p>Capo on fret:</p>
-              <select value={capoOffset} onChange={handleCapoChange}>
+              <select
+                className=" dark:bg-gray-500"
+                value={capoOffset}
+                onChange={handleCapoChange}
+              >
                 <option value="0">No Capo</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -142,7 +152,11 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
 
             <div className="mt-3 mb-3 flex flex-row justify-between">
               <p>Channel to Translate:</p>
-              <select value={channelSelected} onChange={handleChannelSelected}>
+              <select
+                className=" dark:bg-gray-500"
+                value={channelSelected}
+                onChange={handleChannelSelected}
+              >
                 <option value="-1">Detect</option>
                 <option value="0">0</option>
                 <option value="1">1</option>
@@ -172,7 +186,7 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
                 required
               />
               <button
-                className="rounded-lg bg-gray-300 px-5 py-2 transition-colors hover:border-gray-200 hover:bg-gray-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+                className="rounded-lg bg-gray-300 px-5 py-2 transition-colors hover:border-gray-200 hover:bg-gray-400 dark:border-neutral-500 dark:bg-gray-600"
                 onClick={handleOnSubmit}
               >
                 Submit

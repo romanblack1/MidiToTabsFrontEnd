@@ -15,7 +15,7 @@ export default function Home() {
           <div className="preserve-whitespace min-height:20px">{<br />} </div>
           <h1 className="font-bold text-3xl">{title}</h1>
           <div
-            className="text-xs mb-4 flex justify-center dark:bg-slate-500"
+            className="text-xs mb-4 flex justify-center"
             style={{
               fontFamily: "Courier New, Courier, monospace",
               width: "1000px",
