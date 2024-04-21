@@ -1,0 +1,3 @@
+mido==1.3.0
+python-constraint==1.4.0
+supabase==2.4.3
