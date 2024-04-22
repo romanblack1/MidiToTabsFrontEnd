@@ -9,7 +9,7 @@ import {
 
 Font.register({
   family: "Roboto Mono",
-  src: "http://fonts.gstatic.com/s/robotomono/v4/hMqPNLsu_dywMa4C_DEpY50EAVxt0G0biEntp43Qt6E.ttf",
+  src: "https://fonts.gstatic.com/s/robotomono/v4/hMqPNLsu_dywMa4C_DEpY50EAVxt0G0biEntp43Qt6E.ttf",
 });
 
 interface PDFProps {

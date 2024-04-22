@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between dark:bg-slate-700">
       <NavBar />
-      {tab ? (
+      {tab && title ? (
         <>
           <div className="preserve-whitespace min-height:20px">{<br />} </div>
           <h1 className="font-bold text-3xl">{title}</h1>
@@ -29,7 +29,7 @@ export default function Home() {
           </div>
 
           <PDFDownloadLink
-            document={<PDFTab title={title!} tab={tab} />}
+            document={<PDFTab title={title} tab={tab} />}
             fileName={title}
           >
             {({ loading }) =>
