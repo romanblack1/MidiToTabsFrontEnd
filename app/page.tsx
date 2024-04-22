@@ -11,7 +11,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between dark:bg-slate-700">
-      <NavBar />
+      <NavBar setTab={setTab} setTitle={setTitle} />
       {tab && title ? (
         <>
           <div className="preserve-whitespace min-height:20px">{<br />} </div>

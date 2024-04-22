@@ -2,7 +2,12 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function NavBar() {
+interface NavBarProps {
+  setTab: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setTitle: React.Dispatch<React.SetStateAction<string | undefined>>;
+}
+
+export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
   const tabs = ["1", "3", "5", "6", "7", "11", "12", "18", "aaaaa", "aabaa"];
   const [tabSearch, setTabSearch] = useState<string[]>([]);
   const handleTabSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,7 +22,17 @@ export default function NavBar() {
   return (
     <div className="bg-gray-200 w-full h-12 flex items-center px-6 dark:bg-slate-600">
       <Link className="mr-auto" href="/">
-        <Image src="/logo.png" alt="logo" width={40} height={40} priority />
+        <Image
+          src="/logo.png"
+          alt="logo"
+          width={40}
+          height={40}
+          priority
+          onClick={() => {
+            setTab(undefined);
+            setTitle(undefined);
+          }}
+        />
       </Link>
       {/* <p className="flex-grow text-center"> </p>
       <form>
