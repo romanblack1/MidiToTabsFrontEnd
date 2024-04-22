@@ -48,6 +48,7 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
     });
     let title_string = file.name.replace(".mid", "");
     setTitle(title_string.replace(/_/g, " "));
+    setTitle(title_string.replace(/-/g, " "));
     setTab(await res.text());
     setModal(false);
   }
