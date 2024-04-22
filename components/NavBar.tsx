@@ -3,8 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 interface NavBarProps {
-  setTab: React.Dispatch<React.SetStateAction<string | undefined>>;
-  setTitle: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setTab?: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setTitle?: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
@@ -29,8 +29,10 @@ export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
           height={40}
           priority
           onClick={() => {
-            setTab(undefined);
-            setTitle(undefined);
+            if (setTab && setTitle) {
+              setTab(undefined);
+              setTitle(undefined);
+            }
           }}
         />
       </Link>
