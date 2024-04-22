@@ -291,7 +291,7 @@ def optimize_simultaneous_notes(simultaneous_notes, guitar_index):
 # Returns a Tab that has the chosen way to play all notes
 def translate_notes(notes_on, guitar_index):
     guitar_note_list = []
-    notes_on = sorted(notes_on, key=lambda x: x.time)
+    notes_on = sorted(notes_on, key=lambda x: x.quarter_beat_index)
     note_index = 0
     while note_index < len(notes_on):
         current_note = notes_on[note_index]
