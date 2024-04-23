@@ -72,7 +72,7 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
   return (
     <>
       <button
-        className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors hover:border-gray-200 hover:bg-gray-400 dark:border-neutral-700 dark:bg-neutral-800/30 flex flex-col justify-center items-center"
+        className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors hover:bg-gray-400 dark:bg-neutral-800/30 dark:hover:bg-gray-600 flex flex-col justify-center items-center"
         style={{ width: "500px", height: "200px" }}
         onClick={toggleModal}
       >
