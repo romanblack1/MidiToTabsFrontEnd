@@ -1,0 +1,20 @@
+.navbar {
+    overflow: hidden;
+    background-color: #d1d5db; /* bg-gray-200 */
+    width: 100%; /* w-full */
+    height: 3rem; /* h-12 */
+    display: flex; /* flex */
+    align-items: center; /* items-center */
+    padding-left: 1.5rem; /* px-6 */
+    padding-right: 1.5rem; /* px-6 */
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+  
+}
+
+/* For dark mode - Ensure your project is setup to handle media queries for dark mode */
+@media (prefers-color-scheme: dark) {
+    .navbar {
+        background-color: rgba(45, 45, 45, 0.3) ; /* dark:bg-slate-600 */
+    }
+}

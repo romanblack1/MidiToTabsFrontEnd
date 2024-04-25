@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import "./NavBar.css";
 
 interface NavBarProps {
   setTab?: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -20,7 +21,7 @@ export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
   };
 
   return (
-    <div className="bg-gray-200 w-full h-12 flex items-center px-6 dark:bg-slate-600">
+    <div className="navbar">
       <Link className="mr-auto" href="/">
         <Image
           src="/logo.png"
@@ -59,10 +60,7 @@ export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
       <p className="flex-grow text-center text-black text-2xl font-semibold dark:text-slate-800">
         Browse
       </p> */}
-      <Link
-        className="ml-auto text-black text-2xl font-semibold dark:text-slate-800"
-        href="/login"
-      >
+      <Link className="ml-auto text-2xl font-semibold" href="/login">
         Login
       </Link>
     </div>
