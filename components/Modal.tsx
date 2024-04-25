@@ -72,8 +72,7 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
   return (
     <>
       <button
-        className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors hover:bg-gray-400 dark:bg-neutral-800/30 dark:hover:bg-gray-600 flex flex-col justify-center items-center"
-        style={{ width: "500px", height: "200px" }}
+        className="m-20px rounded-lg bg-gray-300 hover:bg-gray-400 dark:bg-neutral-800/30 dark:hover:bg-gray-600 flex flex-col justify-center items-center w-5/12 min-w-64 max-w-lg h-48"
         onClick={toggleModal}
       >
         <h2 className={`mb-3 text-2xl font-semibold`}>Upload a Midi File</h2>
@@ -86,7 +85,7 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
           priority
         />
       </button>
-      {modal && (
+      {modal ? (
         <div className="modal">
           <div onClick={toggleModal} className="overlay"></div>
           <div className="modal-content dark:border-neutral-700 dark:bg-neutral-800/30">
@@ -199,7 +198,7 @@ export default function Modal({ setTab, setTitle }: ModalProps): JSX.Element {
             </button>
           </div>
         </div>
-      )}
+      ) : null}
     </>
   );
 }

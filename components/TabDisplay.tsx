@@ -9,19 +9,15 @@ interface ModalProps {
 
 export default function TabDisplay({ tab, title }: ModalProps): JSX.Element {
   return (
-    <>
-      <div className="preserve-whitespace min-height:20px">{<br />} </div>
-      <h1 className="font-bold text-3xl">{title}</h1>
+    <div className="flex flex-col items-center justify-between w-11/12">
+      <h1 className="font-bold text-3xl m-3">{title}</h1>
       <div
-        className="text-xs mb-4 flex justify-center overflow-scroll w-3/4"
+        className="text-xs flex overflow-x-auto w-5/6"
         style={{
           fontFamily: "Courier New, Courier, monospace",
         }}
       >
-        <pre>
-          <br />
-          {tab}
-        </pre>
+        <pre>{tab}</pre>
       </div>
 
       <PDFDownloadLink
@@ -32,12 +28,12 @@ export default function TabDisplay({ tab, title }: ModalProps): JSX.Element {
           loading ? (
             "loading..."
           ) : (
-            <button className="rounded-lg bg-gray-300 px-5 py-2 transition-colors hover:border-gray-200 hover:bg-gray-400 dark:border-neutral-500 dark:bg-gray-600">
+            <button className="rounded-lg bg-gray-300 px-5 py-2 transition-colors hover:border-gray-200 hover:bg-gray-400 dark:border-neutral-500 dark:bg-gray-600 m-2 mb-4">
               Download Tab as PDF
             </button>
           )
         }
       </PDFDownloadLink>
-    </>
+    </div>
   );
 }
