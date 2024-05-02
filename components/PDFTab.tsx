@@ -23,23 +23,31 @@ export default function PDFTab({ title, tab }: PDFProps): JSX.Element {
       flexDirection: "row",
       backgroundColor: "#E4E4E4",
       paddingTop: 35,
-      paddingBottom: 65,
+      paddingBottom: 35,
       paddingHorizontal: 20,
     },
     section: {
       margin: 10,
       padding: 10,
       flexGrow: 1,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center", // Centers the child components (title and tab section)
     },
     title: {
       fontSize: 24,
       textAlign: "center",
+      marginBottom: 15,
     },
-    tab: {
-      paddingTop: 10,
+    tabContainer: {
+      width: "85%", // Control this percentage to adjust the width of the tab block
+      textAlign: "left", // Ensures text within the tab container is aligned left
+      marginLeft: "auto", // These two auto margins center the container
+      marginRight: "auto",
+    },
+    tabText: {
       fontSize: 7,
       fontFamily: "Roboto Mono",
-      textAlign: "center",
     },
   });
 
@@ -48,7 +56,9 @@ export default function PDFTab({ title, tab }: PDFProps): JSX.Element {
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.tab}>{tab}</Text>
+          <View style={styles.tabContainer}>
+            <Text style={styles.tabText}>{tab}</Text>
+          </View>
         </View>
       </Page>
     </Document>
