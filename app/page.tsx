@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import Modal from "../components/Modal";
 import NavBar from "../components/NavBar";
 import TabDisplay from "../components/TabDisplay";
+import ModalButton from "../components/ModalButton";
 
 export default function Home() {
   const [tab, setTab] = useState<string | undefined>(undefined);
@@ -18,7 +18,7 @@ export default function Home() {
       <NavBar setTab={setTab} setTitle={setTitle} />
       <div className="flex flex-col items-center justify-around w-screen">
         {tab && title ? <TabDisplay tab={tab} title={title} /> : null}
-        <Modal setTab={setTab} setTitle={setTitle} />
+        <ModalButton setTab={setTab} setTitle={setTitle} />
       </div>
     </main>
   );

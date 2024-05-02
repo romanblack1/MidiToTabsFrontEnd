@@ -59,3 +59,15 @@ body.active-modal {
         background-color: #334155; /* Dark mode background color */
     }
 }
+
+.return-home {
+    position: absolute;
+    top: 20px;
+    left: 15px;
+}
+
+.bottom-right {
+    position: absolute;
+    bottom: 20px;
+    right: 15px;
+}
