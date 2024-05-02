@@ -185,7 +185,8 @@ def song_to_tracks(song: MidiFile, channel_num):
                     print(e)
 
     if channel_num == -1:
-        channels_dict.pop(9)
+        if 9 in channels_dict:
+            channels_dict.pop(9)
         channel_num = max(channels_dict, key=lambda channel_index: len(channels_dict[channel_index][0]))
 
     # clear_directory("SplitTrackDepot")
@@ -408,7 +409,8 @@ def print_tab(tab, time_sig_numerator, time_sig_denominator, tuning_offset):
         if time_index > 0 and time_index % quarter_beats_per_measure == 0:
             for guitar_string_index in range(len(guitar_strings)):
                 guitar_strings[guitar_string_index] += "|"
-        if time_index > 0 and time_index % (quarter_beats_per_measure * 6) == 0:
+        if time_index > 0 and time_index % quarter_beats_per_measure == 0 and \
+                len(guitar_strings[0]) + quarter_beats_per_measure > 110:
             print_tab_line(guitar_strings)
             guitar_strings = empty_guitar_strings.copy()
 
