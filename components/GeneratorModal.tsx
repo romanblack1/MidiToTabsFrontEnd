@@ -43,7 +43,7 @@ export default function GeneratorModal({
       method: "POST",
       body: midiFileFormData,
     });
-    const title_string = file.name.replace(".mid", "");
+    const title_string = file.name.replace(/\.mid$/i, "");
     let modified_title = title_string.replace(/_/g, " ").replace(/-/g, " ");
     setTitle(modified_title);
     setTab(await res.text());
