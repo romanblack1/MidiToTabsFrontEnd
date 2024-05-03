@@ -196,7 +196,13 @@ def song_to_tracks(song: MidiFile, channel_num):
     #     temp_song.ticks_per_beat = 480
     #     temp_song.save(f'SplitTrackDepot\\{channel}.mid')
 
-    return important_meta_messages + channels_dict[channel_num][0]
+    if channel_num in channels_dict:
+        return important_meta_messages + channels_dict[channel_num][0]
+    else:
+        print("Invalid channel selected. Here is a list of valid channels:")
+        for key in channels_dict:
+            print(key)
+        exit()
 
 
 # Translates from MIDI note number (0-128) to name with octave and number
@@ -410,7 +416,7 @@ def print_tab(tab, time_sig_numerator, time_sig_denominator, tuning_offset):
             for guitar_string_index in range(len(guitar_strings)):
                 guitar_strings[guitar_string_index] += "|"
         if time_index > 0 and time_index % quarter_beats_per_measure == 0 and \
-                len(guitar_strings[0]) + quarter_beats_per_measure > 110:
+                len(guitar_strings[0]) + quarter_beats_per_measure > 132:
             print_tab_line(guitar_strings)
             guitar_strings = empty_guitar_strings.copy()
 
