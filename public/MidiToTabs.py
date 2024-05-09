@@ -82,18 +82,18 @@ def get_channel_info(midi_file):
 
 # Given tuning and capo offsets, create a dictionary of notes to fret-string combos
 def create_guitar_index(tuning_offset, capo_offset):
-    e_string = (64 + capo_offset, 81)
-    b_string = (59 + capo_offset, 76)
-    g_string = (55 + capo_offset, 72)
-    d_string = (50 + capo_offset, 67)
-    a_string = (45 + capo_offset, 62)
+    e_string = (64 + capo_offset, 83)
+    b_string = (59 + capo_offset, 78)
+    g_string = (55 + capo_offset, 74)
+    d_string = (50 + capo_offset, 69)
+    a_string = (45 + capo_offset, 64)
     low_e_string = (40 + capo_offset + tuning_offset, 57 + tuning_offset)
 
     note_names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
     low_e_string_name = note_names[((40 + tuning_offset) % 12)]
 
     guitar_index = {}
-    for note_num in range(40 + capo_offset + tuning_offset, 82):
+    for note_num in range(low_e_string[0], e_string[1] + 1):
         string_fret_combo = []
         if e_string[0] <= note_num <= e_string[1]:
             string_fret_combo.append(GuitarNote("e", 0, note_num - e_string[0]))
@@ -110,7 +110,7 @@ def create_guitar_index(tuning_offset, capo_offset):
 
         guitar_index[note_num] = string_fret_combo
 
-    return guitar_index, (40 + capo_offset + tuning_offset, 81)
+    return guitar_index, (low_e_string[0], e_string[1])
 
 
 # Captures important info from midi song
@@ -257,6 +257,8 @@ def create_notes(single_track, time_info_dict, guitar_range):
             notes_on.append(temp_note)
         else:
             pass  # print("Not a Note!")
+
+    notes_on = sorted(notes_on, key=lambda x: x.quarter_beat_index)
     return notes_on
 
 
@@ -347,7 +349,6 @@ def optimize_simultaneous_notes(simultaneous_notes, guitar_index):
 # Returns a Tab that has the chosen way to play all notes
 def translate_notes(notes_on, guitar_index):
     guitar_note_list = []
-    notes_on = sorted(notes_on, key=lambda x: x.quarter_beat_index)
     note_index = 0
     while note_index < len(notes_on):
         current_note = notes_on[note_index]
@@ -394,10 +395,19 @@ def print_tab(tab, time_sig_numerator, time_sig_denominator, tuning_offset):
     last_beat_index = tab.guitar_note_list[-1].quarter_beat_index
     song_len = last_beat_index + quarter_beats_per_measure - (last_beat_index % quarter_beats_per_measure) + 1
     note_index = 0
+    note_just_played = False
+    measure_number = 1
+    print(" ", measure_number)
     for time_index in range(1, song_len):
         # to account for fret nums > 2 characters long (10-17), and no notes at this time tick
         max_string_len = len(guitar_strings[0]) + 1
         current_guitar_note = tab.guitar_note_list[note_index] if note_index < len(tab.guitar_note_list) else None
+        if note_just_played:
+            if current_guitar_note and current_guitar_note.quarter_beat_index == time_index:
+                for guitar_string_index in range(len(guitar_strings)):
+                    guitar_strings[guitar_string_index] += "-"
+            note_just_played = False
+
         while current_guitar_note and current_guitar_note.quarter_beat_index == time_index:
             # catches notes on this time tick
             fret = str(current_guitar_note.fret)
@@ -405,6 +415,7 @@ def print_tab(tab, time_sig_numerator, time_sig_denominator, tuning_offset):
             max_string_len = max(max_string_len, len(guitar_strings[current_guitar_note.string_index]))
             note_index += 1
             current_guitar_note = tab.guitar_note_list[note_index] if note_index < len(tab.guitar_note_list) else None
+            note_just_played = True
 
         for guitar_string_index in range(len(guitar_strings)):
             # add dashes to strings that don't have notes at this time tick
@@ -413,12 +424,14 @@ def print_tab(tab, time_sig_numerator, time_sig_denominator, tuning_offset):
                 guitar_strings[guitar_string_index] += ("-" * num_dashes)
 
         if time_index > 0 and time_index % quarter_beats_per_measure == 0:
+            measure_number += 1
             for guitar_string_index in range(len(guitar_strings)):
                 guitar_strings[guitar_string_index] += "|"
         if time_index > 0 and time_index % quarter_beats_per_measure == 0 and \
                 len(guitar_strings[0]) + quarter_beats_per_measure > 132:
             print_tab_line(guitar_strings)
             guitar_strings = empty_guitar_strings.copy()
+            print(" ", measure_number)
 
     if len(guitar_strings[0]) > 3:
         print_tab_line(guitar_strings)

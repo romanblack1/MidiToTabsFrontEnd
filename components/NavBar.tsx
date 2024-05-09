@@ -60,6 +60,9 @@ export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
       <p className="flex-grow text-center text-black text-2xl font-semibold dark:text-slate-800">
         Browse
       </p> */}
+      <Link className="text-xl font-normal" href="/help">
+        Getting Started/Help
+      </Link>
       <Link className="ml-auto text-2xl font-semibold" href="/login">
         Login
       </Link>
