@@ -17,6 +17,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // POST request handler
 export async function POST(request: Request): Promise<Response> {
     try {
+        console.log(supabaseKey)
         // Assuming the MIDI file is uploaded as form-data with key 'midi'
         const formData = await request.formData();
         const username = formData.get('username');
@@ -31,7 +32,7 @@ export async function POST(request: Request): Promise<Response> {
             if(error.message == "JSON object requested, multiple (or no) rows returned"){
                 return new Response("Username or password incorrect", { status: 401 });
             }
-            return new Response(error.message, { status: 500 });
+            return new Response(error.message + ", database query", { status: 500 });
         }
         const hashFromUserInput = crypto.pbkdf2Sync(password, data.password_salt, 1000, 64, `sha512`).toString(`hex`);
         if(hashFromUserInput == data.password_hash){
@@ -42,7 +43,7 @@ export async function POST(request: Request): Promise<Response> {
     } catch (error) {
         console.error(error);
         if (error instanceof Error) {
-            return new Response(error.message, { status: 500 });
+            return new Response(error.message + ", overall post error", { status: 500 });
         } else {
             return new Response("An unknown error occurred", { status: 500 });
         }
