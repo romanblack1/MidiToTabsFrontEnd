@@ -20,9 +20,11 @@ export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
     }
   };
 
+  const username = "example_name"; // todo add username fetch
+
   return (
     <div className="navbar">
-      <Link className="mr-auto" href="/">
+      <Link className="" href="/">
         <Image
           src="/logo.png"
           alt="logo"
@@ -37,35 +39,24 @@ export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
           }}
         />
       </Link>
-      {/* <p className="flex-grow text-center"> </p>
-      <form>
-        <div className="relative">
-          <input
-            className="dark:bg-slate-500"
-            type="search"
-            placeholder="Search"
-            onChange={(e) => handleTabSearch(e)}
-          />
-        </div>
-        {tabSearch.length > 0 && (
-          <div className="absolute top-8 p-1 flex flex-col bg-slate-500">
-            {tabSearch.map((s) => (
-              <span key={s}>{s}</span>
-            ))}
-          </div>
-        )}
-      </form> */}
-      {/* <p className="flex-grow text-center"> </p>
-      <p className="flex-grow text-center"> </p>
-      <p className="flex-grow text-center text-black text-2xl font-semibold dark:text-slate-800">
-        Browse
-      </p> */}
-      <Link className="text-xl font-normal" href="/help">
+      <Link className="text-xl font-normal text-center" href="/help">
         Getting Started/Help
       </Link>
-      <Link className="ml-auto text-2xl font-semibold" href="/login">
-        Login
-      </Link>
+      <div className="flex flex-row text-2xl ml-auto font-semibold">
+        {username ? (
+          <div>
+            <Link className="mr-4" href="/tabs">
+              All Tabs
+            </Link>
+            <Link className="mr-4" href="/id">
+              My Tabs
+            </Link>
+          </div>
+        ) : null}
+        <Link className="" href="/login">
+          {username ? username : "Login"}
+        </Link>
+      </div>
     </div>
   );
 }
