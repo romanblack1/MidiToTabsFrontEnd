@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import "./NavBar.css";
@@ -20,7 +20,21 @@ export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
     }
   };
 
-  const username = "example_name"; // todo add username fetch
+  const [userId, setUserId] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Access localStorage only in the browser
+    const storedUserId = localStorage.getItem("userId");
+    const storedUsername = localStorage.getItem("username");
+
+    if (storedUserId) {
+      setUserId(storedUserId);
+    }
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
 
   return (
     <div className="navbar">

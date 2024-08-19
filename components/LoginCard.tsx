@@ -25,7 +25,7 @@ export default function LoginCard() {
           password: "",
         }}
         onSubmit={async (values, actions) => {
-          console.log({ values, actions });
+          // console.log({ values, actions });
           const loginFormData = new FormData();
           loginFormData.append("username", values.username);
           loginFormData.append("password", values.password);
@@ -34,11 +34,10 @@ export default function LoginCard() {
             method: "POST",
             body: loginFormData,
           });
-          // Check if the response status is OK (status code 200-299)
           const data = await res.json(); // Parse the JSON response
           alert(data.message); // Alert the message from the response
-          //setUserId(data.userId); // todo update local storage with username and userid
-          //setUsername(values.username);
+          localStorage.setItem("userId", data.userId);
+          localStorage.setItem("username", values.username);
           actions.setSubmitting(false);
         }}
       >
