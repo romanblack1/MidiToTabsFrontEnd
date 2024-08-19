@@ -38,6 +38,7 @@ export default function LoginCard() {
           alert(data.message); // Alert the message from the response
           localStorage.setItem("userId", data.userId);
           localStorage.setItem("username", values.username);
+          window.location.reload();
           actions.setSubmitting(false);
         }}
       >
