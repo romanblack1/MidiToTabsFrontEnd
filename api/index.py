@@ -6,15 +6,15 @@ import cgi
 import io
 from contextlib import redirect_stdout
 
-# # Supabase setup
-# supabase_url = 'https://imhygltdhfgpyyvbwmps.supabase.co'
-# supabase_key = os.environ.get('SUPABASE_API_KEY')
+# Supabase setup
+supabase_url = 'https://imhygltdhfgpyyvbwmps.supabase.co'
+supabase_key = os.environ.get('SUPABASE_API_KEY')
 
-# # Ensure the SUPABASE_API_KEY environment variable is set
-# if not supabase_key:
-#     raise ValueError('Supabase API key not provided in environment variable SUPABASE_API_KEY')
+# Ensure the SUPABASE_API_KEY environment variable is set
+if not supabase_key:
+    raise ValueError('Supabase API key not provided in environment variable SUPABASE_API_KEY')
 
-# supabase: Client = create_client(supabase_url, supabase_key)
+supabase: Client = create_client(supabase_url, supabase_key)
 
 
 class handler(BaseHTTPRequestHandler):
@@ -58,6 +58,11 @@ class handler(BaseHTTPRequestHandler):
                 with redirect_stdout(f):
                     run_main(["MidiToTabs.py", file_path, channel_selected, tuning_offset, capo_offset])
                 response = f.getvalue()
+                supabase_response = (supabase.table("tabs").insert({"name": file_item.filename.replace(".mid", "").replace("-", " ").replace("_", " "), "tab": response}).execute())
+                print(supabase_response)
+                tab_id = supabase_response.data[0]['id']
+                print(tab_id)
+                response += "\ntab_id: " + str(tab_id)
 
                 # Send response to the client
                 self.send_response(200)
