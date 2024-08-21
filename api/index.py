@@ -23,7 +23,6 @@ supabase: Client = create_client(supabase_url, supabase_key)
 class handler(BaseHTTPRequestHandler):
  
     def do_GET(self):
-        print(f"Requested path: {self.path}")
         # Parse the URL and the query parameters
         parsed_path = urlparse(self.path)
         query_params = parse_qs(parsed_path.query)
