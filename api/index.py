@@ -117,7 +117,7 @@ class handler(BaseHTTPRequestHandler):
                 with redirect_stdout(f):
                     run_main(["MidiToTabs.py", file_path, channel_selected, tuning_offset, capo_offset])
                 response = f.getvalue()
-                supabase_response = (supabase.table("tabs").insert({"name": file_item.filename.replace(".mid", "").replace("-", " ").replace("_", " "), "tab": response, "created_by": username}).execute())
+                supabase_response = (supabase.table("tabs").insert({"name": file_item.filename.replace(".mid", "").replace(".MID", "").replace("-", " ").replace("_", " "), "tab": response, "created_by": username}).execute())
                 print(supabase_response)
                 tab_id = supabase_response.data[0]['id']
                 print(tab_id)
