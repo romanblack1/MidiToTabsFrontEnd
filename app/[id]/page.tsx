@@ -1,21 +1,42 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../../components/NavBar";
 import Image from "next/image";
 
 export default function Home() {
-  const [savedTabs, setSavedTabs] = useState<string[]>(["tab b"]);
-  const [hovered, setHovered] = useState(false);
+  const [savedTabs, setSavedTabs] = useState<string[]>([
+    "tab b",
+    "tab d",
+    "tab e",
+  ]);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userData, setUserData] = useState(null);
 
-  const toggleSaved = (tabName: string) => {
-    if (savedTabs.includes(tabName)) {
-      // Remove tab if it's already saved
-      setSavedTabs(savedTabs.filter((tab) => tab !== tabName));
-    } else {
-      // Add tab to savedTabs
-      setSavedTabs([...savedTabs, tabName]);
-    }
-  };
+  //   const fetchUserData = async (userId: string) => {
+  //     // Example API call to get user data
+  //     const response = await fetch(`/api/get_my_tabs?userid=${userId}`);
+  //     const data = await response.json();
+  //     setUserData(data);
+  //   };
+
+  //   const deleteTab = async (userId: string) => {
+  //     // Example API call to get user data
+  //     const response = await fetch(`/api/delete_tab`);
+  //     const data = await response.json();
+  //     setUserData(data);
+  //   };
+
+  //   useEffect(() => {
+  //     const storedUserId = localStorage.getItem("userId");
+  //     setUserId(storedUserId);
+
+  //     userId ? fetchUserData(userId) : null;
+  //   }, []);
+
+  //   if (!userId) {
+  //     return <div>Loading...</div>;
+  //   }
 
   return (
     <main
@@ -33,20 +54,22 @@ export default function Home() {
               <div>{tabName}</div>
               <div className="ml-auto">
                 <Image
-                  src={hovered ? "/trash.png" : "/saved.png"}
+                  src={hoveredIndex === index ? "/trash.png" : "/saved.png"}
                   alt="saved tab"
                   className="dark:invert"
-                  onMouseEnter={() => setHovered(true)}
-                  onMouseLeave={() => setHovered(false)}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
                   width={24}
                   height={24}
                   onClick={() => {
                     setSavedTabs(savedTabs.filter((tab) => tab !== tabName));
+                    // deleteTab(tabName);
                   }}
                 />
               </div>
             </React.Fragment>
           ))}
+          {userData}
         </div>
       </div>
     </main>
