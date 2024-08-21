@@ -59,11 +59,7 @@ export default function GeneratorModal({
         let modified_title = title_string.replace(/_/g, " ").replace(/-/g, " ");
         setTitle(modified_title);
         const response_text = await res.text();
-        let index_of_tabId = response_text.indexOf("tab_id: ");
-        let tabIdStr = response_text.substring(index_of_tabId);
-        tabIdStr = tabIdStr.replace("tab_id: ", "");
-        let tabIdNum = parseInt(tabIdStr); // the id of the generated tab as a number
-        setTab(response_text.substring(0, index_of_tabId));
+        setTab(response_text);
         setModalDisplay("0");
     }
 

@@ -51,7 +51,7 @@ class handler(BaseHTTPRequestHandler):
                     .from_("usersSavedTabs") \
                     .select("""
                         userId,
-                        tabs(created_at, tab, name, created_by),
+                        tabs(id, created_at, tab, name, created_by),
                         users(username)
                     """) \
                     .eq("userId", int(user_id)) \
@@ -118,10 +118,9 @@ class handler(BaseHTTPRequestHandler):
                     run_main(["MidiToTabs.py", file_path, channel_selected, tuning_offset, capo_offset])
                 response = f.getvalue()
                 supabase_response = (supabase.table("tabs").insert({"name": file_item.filename.replace(".mid", "").replace(".MID", "").replace("-", " ").replace("_", " "), "tab": response, "created_by": username}).execute())
-                print(supabase_response)
                 tab_id = supabase_response.data[0]['id']
-                print(tab_id)
-                response += "\ntab_id: " + str(tab_id)
+                if userid != "null":
+                    supabase.table("usersSavedTabs").insert({"userId": int(userid), "tabId": tab_id}).execute()
 
                 # Send response to the client
                 self.send_response(200)
