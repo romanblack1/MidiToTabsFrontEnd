@@ -18,6 +18,16 @@ export default function GeneratorModal({
     channelInfo,
 }: GeneratorModalProps): JSX.Element {
     const [channelSelected, setChannelSelected] = useState(channelInfo[0][2]);
+    const [userId, setUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        // Access localStorage only in the browser
+        const storedUserId = localStorage.getItem("userId");
+
+        if (storedUserId) {
+            setUserId(storedUserId);
+        }
+    }, []);
 
     async function handleOnSubmit(e: React.SyntheticEvent) {
         e.preventDefault();
@@ -31,12 +41,14 @@ export default function GeneratorModal({
         if (!file) {
             console.error("No MIDI file provided");
         } else {
+
             // Append midiFile to FormData
             midiFileFormData.append("midiFile", file);
             // Append channelSelected, tuningOffset, and capoOffset to FormData
             midiFileFormData.append("channelSelected", channelSelected.toString());
             midiFileFormData.append("tuningOffset", "0");
             midiFileFormData.append("capoOffset", "0");
+            midiFileFormData.append("userId", userId ? userId : "null")
         }
         //api call
         const res = await fetch("/api", {
