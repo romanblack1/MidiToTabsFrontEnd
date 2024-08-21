@@ -110,7 +110,7 @@ class handler(BaseHTTPRequestHandler):
                 userid = form.getvalue('userId')
                 username = "anonymous"
                 if userid != "null":
-                    username = (supabase.table("users").select("username").eq("id", int(user_id)).execute()).data[0]['username']
+                    username = (supabase.table("users").select("username").eq("id", int(userid)).execute()).data[0]['username']
 
                 # Run MidiToTabs.py with file written into a path
                 f = io.StringIO()
