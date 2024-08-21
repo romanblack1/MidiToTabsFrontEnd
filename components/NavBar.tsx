@@ -61,7 +61,7 @@ export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
           All Tabs
         </Link>
         {username ? (
-          <Link className="mr-4" href="/id">
+          <Link className="mr-4" href={`/${userId}`}>
             My Tabs
           </Link>
         ) : null}
