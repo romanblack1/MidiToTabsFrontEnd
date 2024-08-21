@@ -27,6 +27,8 @@ class handler(BaseHTTPRequestHandler):
         parsed_path = urlparse(self.path)
         query_params = parse_qs(parsed_path.query)
 
+        print(parsed_path.path)
+
         # Handle different paths
         if parsed_path.path == "/get_all_tabs":
             # Logic to get all tabs from the database
@@ -76,7 +78,7 @@ class handler(BaseHTTPRequestHandler):
         
         else:
             # Handle unknown paths
-            self.send_response(404)
+            self.send_response(405)
             self.send_header('Content-type', 'text/plain')
             self.end_headers()
             self.wfile.write("Not Found".encode('utf-8'))
