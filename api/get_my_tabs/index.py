@@ -42,6 +42,10 @@ class handler(BaseHTTPRequestHandler):
 
             my_tabs = json.dumps(response.data)
                 
+            print(response.data)
+
+            print(my_tabs)
+
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.end_headers()
