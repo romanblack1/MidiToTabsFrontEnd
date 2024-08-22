@@ -29,9 +29,6 @@ class handler(BaseHTTPRequestHandler):
 
         # Logic to get all tabs from the database
         supabase_response = (supabase.table("tabs").select("*").execute())
-        if supabase_response.error:
-                print(f"Error: {supabase_response.error}")
-                return None
         all_tabs = json.dumps(supabase_response.data)
 
         self.send_response(200)

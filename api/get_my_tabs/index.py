@@ -40,10 +40,6 @@ class handler(BaseHTTPRequestHandler):
                 .eq("userId", int(userid)) \
                 .execute()
 
-            if response.error:
-                print(f"Error: {response.error}")
-                return None
-
             my_tabs = json.dumps(response.data)
                 
             self.send_response(200)
