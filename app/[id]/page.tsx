@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import NavBar from "../../components/NavBar";
 import Image from "next/image";
 import Link from "next/link";
+import { log } from "console";
 
 type SavedTab = {
   name: string;
@@ -23,6 +24,7 @@ export default function Home() {
       method: "GET",
     });
     const data = await response.json();
+    console.log(data);
     setSavedTabs(data);
   };
 
@@ -33,9 +35,9 @@ export default function Home() {
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
+    console.log(storedUserId);
     setUserId(storedUserId);
-
-    userId ? fetchUserData(userId) : null;
+    storedUserId ? fetchUserData(storedUserId) : null;
   }, []);
 
   if (!userId) {

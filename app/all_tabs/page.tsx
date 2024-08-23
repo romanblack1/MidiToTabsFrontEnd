@@ -5,12 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 type Tab = {
-  tab: SavedTab;
+  tabs: SavedTab;
 };
 
 type SavedTab = {
   name: string;
-  tab_id: number;
+  id: number;
   tab: string;
   created_by: string;
   created_at: string;
@@ -48,11 +48,9 @@ export default function Home() {
   }, []);
 
   const toggleSaved = (tab: SavedTab) => {
-    if (savedTabs.some((savedTab) => savedTab.tab_id === tab.tab_id)) {
+    if (savedTabs.some((savedTab) => savedTab.id === tab.id)) {
       // Remove tab if it's already saved
-      setSavedTabs(
-        savedTabs.filter((cur_tab) => cur_tab.tab_id !== tab.tab_id)
-      );
+      setSavedTabs(savedTabs.filter((cur_tab) => cur_tab.id !== tab.id));
       // todo: deleteTab(tabName);
     } else {
       // Add tab to savedTabs
@@ -81,20 +79,20 @@ export default function Home() {
               <Link className="" href="/">
                 <button
                   onClick={() => {
-                    localStorage.setItem("tabTitle", all_tab.tab.name);
-                    localStorage.setItem("tabContent", all_tab.tab.tab);
+                    localStorage.setItem("tabTitle", all_tab.tabs.name);
+                    localStorage.setItem("tabContent", all_tab.tabs.tab);
                   }}
                 >
-                  {all_tab.tab.name}
+                  {all_tab.tabs.name}
                 </button>
               </Link>
 
               <span>
-                {all_tab.tab.created_by + ": " + all_tab.tab.created_at}
+                {all_tab.tabs.created_by + ": " + all_tab.tabs.created_at}
               </span>
               <div className="ml-auto">
                 {savedTabs.some(
-                  (savedTab) => savedTab.tab_id === all_tab.tab.tab_id
+                  (savedTab) => savedTab.id === all_tab.tabs.id
                 ) ? (
                   <Image
                     src="/saved.png"
@@ -103,7 +101,7 @@ export default function Home() {
                     width={24}
                     height={24}
                     onClick={() => {
-                      toggleSaved(all_tab.tab);
+                      toggleSaved(all_tab.tabs);
                     }}
                   />
                 ) : (
@@ -114,7 +112,7 @@ export default function Home() {
                     width={24}
                     height={24}
                     onClick={() => {
-                      toggleSaved(all_tab.tab);
+                      toggleSaved(all_tab.tabs);
                     }}
                     priority
                   />
