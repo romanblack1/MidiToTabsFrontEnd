@@ -3,11 +3,23 @@ import React, { useEffect, useState } from "react";
 import NavBar from "../../components/NavBar";
 import Image from "next/image";
 
-export default function Home() {
-  const [userId, setUserId] = useState<string | null>(null);
+type Tab = {
+  name: string;
+  created_at: string;
+  tab_id: number;
+  user_id: number;
+};
 
-  // const [allTabs, setAllTabs] = useState<string[]>([]);
-  // const [savedTabs, setSavedTabs] = useState<string[]>([]);
+type SavedTab = {
+  name: string;
+  created_at: string;
+  tab_id: number;
+  user_id: number;
+};
+
+export default function Home() {
+  const [allTabs, setAllTabs] = useState<Tab[]>([]);
+  const [savedTabs, setSavedTabs] = useState<SavedTab[]>([]);
 
   const fetchAllTabs = async () => {
     // Example API call to get user data
@@ -17,7 +29,7 @@ export default function Home() {
 
     const data = await response.json();
     console.log(data);
-    // setAllTabs(data);
+    setAllTabs(data);
   };
   const fetchSavedTabs = async (userId: string) => {
     // Example API call to get user data
@@ -26,26 +38,27 @@ export default function Home() {
     });
     const data = await response.json();
     console.log(data);
-    // setSavedTabs(data);
+    setSavedTabs(data);
   };
 
   useEffect(() => {
     fetchAllTabs();
 
     const storedUserId = localStorage.getItem("userId");
-    setUserId(storedUserId);
     storedUserId ? fetchSavedTabs(storedUserId) : null;
   });
 
-  // const toggleSaved = (tabName: string) => {
-  //   if (savedTabs.includes(tabName)) {
-  //     // Remove tab if it's already saved
-  //     setSavedTabs(savedTabs.filter((tab) => tab !== tabName));
-  //   } else {
-  //     // Add tab to savedTabs
-  //     setSavedTabs([...savedTabs, tabName]);
-  //   }
-  // };
+  const toggleSaved = (tab: Tab) => {
+    if (savedTabs.some((savedTab) => savedTab.tab_id === tab.tab_id)) {
+      // Remove tab if it's already saved
+      setSavedTabs(
+        savedTabs.filter((cur_tab) => cur_tab.tab_id !== tab.tab_id)
+      );
+    } else {
+      // Add tab to savedTabs
+      setSavedTabs([...savedTabs, tab]);
+    }
+  };
 
   return (
     <main
@@ -57,13 +70,27 @@ export default function Home() {
       <NavBar />
       <div className="flex flex-col items-center justify-around w-screen">
         <h1 className="font-bold text-3xl m-3">All Tabs</h1>
-        <div className="grid grid-cols-2 gap-3">
-          hello
-          {/* {allTabs.map((tabName, index) => (
+        <div className="grid grid-cols-3 gap-3">
+          <span>Name</span>
+          <span>Created By</span>
+          <span className="ml-auto">Saved</span>
+
+          {allTabs.map((tab, index) => (
             <React.Fragment key={index}>
-              <div>{tabName}</div>
+              <button
+                onClick={() => {
+                  // if (setTab && setTitle) {
+                  //   setTab(undefined);
+                  //   setTitle(undefined);
+                  // }
+                }}
+              >
+                {tab.name}
+              </button>
               <div className="ml-auto">
-                {savedTabs.includes(tabName) ? (
+                {savedTabs.some(
+                  (savedTab) => savedTab.tab_id === tab.tab_id
+                ) ? (
                   <Image
                     src="/saved.png"
                     alt="saved tab"
@@ -71,7 +98,7 @@ export default function Home() {
                     width={24}
                     height={24}
                     onClick={() => {
-                      toggleSaved(tabName);
+                      toggleSaved(tab);
                     }}
                   />
                 ) : (
@@ -82,14 +109,14 @@ export default function Home() {
                     width={24}
                     height={24}
                     onClick={() => {
-                      toggleSaved(tabName);
+                      toggleSaved(tab);
                     }}
                     priority
                   />
                 )}
               </div>
             </React.Fragment>
-          ))} */}
+          ))}
         </div>
       </div>
     </main>
