@@ -34,8 +34,12 @@ class handler(BaseHTTPRequestHandler):
                 .from_("usersSavedTabs") \
                 .select("""
                     userId,
-                    tabs(id, created_at, tab, name, created_by),
-                    users(username)
+                    tabs (
+                        id, created_at, tab, name, created_by
+                    ),
+                    users (
+                        username
+                    )
                 """) \
                 .eq("userId", int(userid)) \
                 .execute()
