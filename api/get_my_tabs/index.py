@@ -32,7 +32,7 @@ class handler(BaseHTTPRequestHandler):
             # Logic to get tabs specific to the userid from the database
             response = supabase \
                 .from_("usersSavedTabs") \
-                .select("""
+                .select('''
                     userId,
                     tabs (
                         id, created_at, tab, name, created_by
@@ -40,7 +40,7 @@ class handler(BaseHTTPRequestHandler):
                     users (
                         username
                     )
-                """) \
+                ''') \
                 .eq("userId", int(userid)) \
                 .execute()
 
