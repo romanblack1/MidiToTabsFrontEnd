@@ -31,9 +31,22 @@ export default function Home() {
     setSavedTabs(data);
   };
 
-  const deleteTab = async (userId: string) => {
-    // Example API call to get user data
-    const response = await fetch(`/api/delete_tab`);
+  // Example API call to create connection
+  const createConnection = async (userId: string, tabId: string) => {
+      const response = await fetch(`/api/connections?user_id=${userId}&tab_id=${tabId}`, {
+          method: "POST",
+      });
+      const data = await response.text();
+      console.log(data);
+  };
+
+  // Example API call to create connection
+  const deleteConnection = async (userId: string, tabId: string) => {
+      const response = await fetch(`/api/connections?user_id=${userId}&tab_id=${tabId}`, {
+          method: "DELETE",
+      });
+      const data = await response.text();
+      console.log(data);
   };
 
   useEffect(() => {

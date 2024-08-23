@@ -22,66 +22,6 @@ supabase: Client = create_client(supabase_url, supabase_key)
 
 class handler(BaseHTTPRequestHandler):
  
-    def do_GET(self):
-        # Parse the URL and the query parameters
-        parsed_path = urlparse(self.path)
-        query_params = parse_qs(parsed_path.query)
-
-        # Handle different paths
-        if parsed_path.path == "/get_all_tabs":
-            # Logic to get all tabs from the database
-            supabase_response = (supabase.table("tabs").select("*").execute())
-            if supabase_response.error:
-                    print(f"Error: {supabase_response.error}")
-                    return None
-            all_tabs = json.dumps(supabase_response.data)
-
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            self.wfile.write(all_tabs.encode('utf-8'))
-        
-        elif parsed_path.path == "/get_my_tabs":
-            # Get the userid from query parameters
-            userid = query_params.get('userid', [None])[0]
-            
-            if userid:
-                # Logic to get tabs specific to the userid from the database
-                response = supabase \
-                    .from_("usersSavedTabs") \
-                    .select("""
-                        userId,
-                        tabs(id, created_at, tab, name, created_by),
-                        users(username)
-                    """) \
-                    .eq("userId", int(userid)) \
-                    .execute()
-
-                if response.error:
-                    print(f"Error: {response.error}")
-                    return None
-
-                my_tabs = json.dumps(response.data)
-                
-                self.send_response(200)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                self.wfile.write(my_tabs.encode('utf-8'))
-            else:
-                # If userid is not provided, return an error
-                self.send_response(400)
-                self.send_header('Content-type', 'text/plain')
-                self.end_headers()
-                self.wfile.write("Missing userid parameter".encode('utf-8'))
-        
-        else:
-            # Handle unknown paths
-            self.send_response(404)
-            self.send_header('Content-type', 'text/plain')
-            self.end_headers()
-            self.wfile.write("Not Found".encode('utf-8'))
-    
-
     def do_POST(self):
         # Parse the form data posted
         form = cgi.FieldStorage(
@@ -120,7 +60,7 @@ class handler(BaseHTTPRequestHandler):
                 supabase_response = (supabase.table("tabs").insert({"name": file_item.filename.replace(".mid", "").replace(".MID", "").replace("-", " ").replace("_", " "), "tab": response, "created_by": username}).execute())
                 tab_id = supabase_response.data[0]['id']
                 if userid != "null":
-                    supabase.table("usersSavedTabs").insert({"userId": int(userid), "tabId": tab_id}).execute()
+                    supabase.table("users_saved_tabs").insert({"user_id": int(userid), "tab_id": tab_id}).execute()
 
                 # Send response to the client
                 self.send_response(200)

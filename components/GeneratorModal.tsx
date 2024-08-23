@@ -51,7 +51,7 @@ export default function GeneratorModal({
             midiFileFormData.append("userId", userId ? userId : "null")
         }
         //api call
-        const res = await fetch("/api", {
+        const res = await fetch("/api/generate", {
             method: "POST",
             body: midiFileFormData,
         });
