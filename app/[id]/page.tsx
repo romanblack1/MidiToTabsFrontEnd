@@ -3,11 +3,14 @@ import React, { useEffect, useState } from "react";
 import NavBar from "../../components/NavBar";
 import Image from "next/image";
 import Link from "next/link";
-import { log } from "console";
 
 type SavedTab = {
+  tab: Tab;
+};
+
+type Tab = {
   name: string;
-  tab_id: number;
+  id: number;
   tab: string;
   created_by: string;
   created_at: string;
@@ -35,7 +38,6 @@ export default function Home() {
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
-    console.log(storedUserId);
     setUserId(storedUserId);
     storedUserId ? fetchUserData(storedUserId) : null;
   }, []);
@@ -55,19 +57,25 @@ export default function Home() {
       <div className="flex flex-col items-center justify-around w-screen">
         <h1 className="font-bold text-3xl m-3">My Saved Tabs</h1>
         <div className="grid grid-cols-3 gap-3">
+          <span>Name</span>
+          <span>Created By</span>
+          <span className="ml-auto">Saved</span>
+
           {savedTabs.map((savedTab, index) => (
             <React.Fragment key={index}>
               <Link className="" href="/">
                 <button
                   onClick={() => {
-                    localStorage.setItem("tabTitle", savedTab.name);
-                    localStorage.setItem("tabContent", savedTab.tab);
+                    localStorage.setItem("tabTitle", savedTab.tab.name);
+                    localStorage.setItem("tabContent", savedTab.tab.tab);
                   }}
                 >
-                  {savedTab.name}
+                  {savedTab.tab.name}
                 </button>
               </Link>
-              <span>{savedTab.created_by + ": " + savedTab.created_at}</span>
+              <span>
+                {savedTab.tab.created_by + ": " + savedTab.tab.created_at}
+              </span>
               <div className="ml-auto">
                 <Image
                   src={hoveredIndex === index ? "/trash.png" : "/saved.png"}
@@ -79,7 +87,7 @@ export default function Home() {
                   height={24}
                   onClick={() => {
                     setSavedTabs(
-                      savedTabs.filter((tab) => tab.tab_id !== savedTab.tab_id)
+                      savedTabs.filter((tab) => tab.tab.id !== savedTab.tab.id)
                     );
                     // todo: deleteTab(tabName);
                   }}

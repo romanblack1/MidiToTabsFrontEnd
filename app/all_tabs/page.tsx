@@ -4,11 +4,11 @@ import NavBar from "../../components/NavBar";
 import Image from "next/image";
 import Link from "next/link";
 
-type Tab = {
-  tabs: SavedTab;
+type SavedTab = {
+  tab: Tab;
 };
 
-type SavedTab = {
+type Tab = {
   name: string;
   id: number;
   tab: string;
@@ -47,14 +47,14 @@ export default function Home() {
     storedUserId ? fetchSavedTabs(storedUserId) : null;
   }, []);
 
-  const toggleSaved = (tab: SavedTab) => {
-    if (savedTabs.some((savedTab) => savedTab.id === tab.id)) {
+  const toggleSaved = (tab: Tab) => {
+    if (savedTabs.some((savedTab) => savedTab.tab.id === tab.id)) {
       // Remove tab if it's already saved
-      setSavedTabs(savedTabs.filter((cur_tab) => cur_tab.id !== tab.id));
+      setSavedTabs(savedTabs.filter((cur_tab) => cur_tab.tab.id !== tab.id));
       // todo: deleteTab(tabName);
     } else {
       // Add tab to savedTabs
-      setSavedTabs([...savedTabs, tab]);
+      setSavedTabs([...savedTabs, { tab }]);
       // todo: saveTab(tabName);
     }
   };
@@ -79,20 +79,18 @@ export default function Home() {
               <Link className="" href="/">
                 <button
                   onClick={() => {
-                    localStorage.setItem("tabTitle", all_tab.tabs.name);
-                    localStorage.setItem("tabContent", all_tab.tabs.tab);
+                    localStorage.setItem("tabTitle", all_tab.name);
+                    localStorage.setItem("tabContent", all_tab.tab);
                   }}
                 >
-                  {all_tab.tabs.name}
+                  {all_tab.name}
                 </button>
               </Link>
 
-              <span>
-                {all_tab.tabs.created_by + ": " + all_tab.tabs.created_at}
-              </span>
+              <span>{all_tab.created_by + ": " + all_tab.created_at}</span>
               <div className="ml-auto">
                 {savedTabs.some(
-                  (savedTab) => savedTab.id === all_tab.tabs.id
+                  (savedTab) => savedTab.tab.id === all_tab.id
                 ) ? (
                   <Image
                     src="/saved.png"
@@ -101,7 +99,7 @@ export default function Home() {
                     width={24}
                     height={24}
                     onClick={() => {
-                      toggleSaved(all_tab.tabs);
+                      toggleSaved(all_tab);
                     }}
                   />
                 ) : (
@@ -112,7 +110,7 @@ export default function Home() {
                     width={24}
                     height={24}
                     onClick={() => {
-                      toggleSaved(all_tab.tabs);
+                      toggleSaved(all_tab);
                     }}
                     priority
                   />
