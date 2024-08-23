@@ -26,14 +26,14 @@ class handler(BaseHTTPRequestHandler):
         parsed_path = urlparse(self.path)
         query_params = parse_qs(parsed_path.query)
         # Get the userid from query parameters
-        userid = query_params.get('userid', [None])[0]
+        user_id = query_params.get('user_id', [None])[0]
             
-        if userid:
+        if user_id:
             # Logic to get tabs specific to the userid from the database
             response = supabase \
                 .from_("users_saved_tabs") \
-                .select("user_id, tabs(id, created_at, tab, name, created_by), users(username)") \
-                .eq("user_id", userid) \
+                .select("tabs(id, created_at, tab, name, created_by)") \
+                .eq("user_id", user_id) \
                 .execute()
 
             my_tabs = json.dumps(response.data)

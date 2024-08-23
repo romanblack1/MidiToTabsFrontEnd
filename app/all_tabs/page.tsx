@@ -33,7 +33,7 @@ export default function Home() {
   };
   const fetchSavedTabs = async (userId: string) => {
     // Example API call to get user data
-    const response = await fetch(`/api/get_my_tabs?userid=${userId}`, {
+    const response = await fetch(`/api/get_my_tabs?user_id=${userId}`, {
       method: "GET",
     });
     const data = await response.json();
