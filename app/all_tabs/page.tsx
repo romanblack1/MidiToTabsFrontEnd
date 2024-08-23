@@ -2,19 +2,18 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../../components/NavBar";
 import Image from "next/image";
+import Link from "next/link";
 
 type Tab = {
-  name: string;
-  created_at: string;
-  tab_id: number;
-  user_id: number;
+  tab: SavedTab;
 };
 
 type SavedTab = {
   name: string;
-  created_at: string;
   tab_id: number;
-  user_id: number;
+  tab: string;
+  created_by: string;
+  created_at: string;
 };
 
 export default function Home() {
@@ -46,17 +45,19 @@ export default function Home() {
 
     const storedUserId = localStorage.getItem("userId");
     storedUserId ? fetchSavedTabs(storedUserId) : null;
-  });
+  }, []);
 
-  const toggleSaved = (tab: Tab) => {
+  const toggleSaved = (tab: SavedTab) => {
     if (savedTabs.some((savedTab) => savedTab.tab_id === tab.tab_id)) {
       // Remove tab if it's already saved
       setSavedTabs(
         savedTabs.filter((cur_tab) => cur_tab.tab_id !== tab.tab_id)
       );
+      // todo: deleteTab(tabName);
     } else {
       // Add tab to savedTabs
       setSavedTabs([...savedTabs, tab]);
+      // todo: saveTab(tabName);
     }
   };
 
@@ -75,21 +76,25 @@ export default function Home() {
           <span>Created By</span>
           <span className="ml-auto">Saved</span>
 
-          {allTabs.map((tab, index) => (
+          {allTabs.map((all_tab, index) => (
             <React.Fragment key={index}>
-              <button
-                onClick={() => {
-                  // if (setTab && setTitle) {
-                  //   setTab(undefined);
-                  //   setTitle(undefined);
-                  // }
-                }}
-              >
-                {tab.name}
-              </button>
+              <Link className="" href="/">
+                <button
+                  onClick={() => {
+                    localStorage.setItem("tabTitle", all_tab.tab.name);
+                    localStorage.setItem("tabContent", all_tab.tab.tab);
+                  }}
+                >
+                  {all_tab.tab.name}
+                </button>
+              </Link>
+
+              <span>
+                {all_tab.tab.created_by + ": " + all_tab.tab.created_at}
+              </span>
               <div className="ml-auto">
                 {savedTabs.some(
-                  (savedTab) => savedTab.tab_id === tab.tab_id
+                  (savedTab) => savedTab.tab_id === all_tab.tab.tab_id
                 ) ? (
                   <Image
                     src="/saved.png"
@@ -98,7 +103,7 @@ export default function Home() {
                     width={24}
                     height={24}
                     onClick={() => {
-                      toggleSaved(tab);
+                      toggleSaved(all_tab.tab);
                     }}
                   />
                 ) : (
@@ -109,7 +114,7 @@ export default function Home() {
                     width={24}
                     height={24}
                     onClick={() => {
-                      toggleSaved(tab);
+                      toggleSaved(all_tab.tab);
                     }}
                     priority
                   />

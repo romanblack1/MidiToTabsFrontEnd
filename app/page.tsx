@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import TabDisplay from "../components/TabDisplay";
 import ModalButton from "../components/ModalButton";
@@ -7,6 +7,16 @@ import ModalButton from "../components/ModalButton";
 export default function Home() {
   const [tab, setTab] = useState<string | undefined>(undefined);
   const [title, setTitle] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const storedTabTitle = localStorage.getItem("tabTitle");
+    const storedTabContent = localStorage.getItem("tabContent");
+
+    storedTabTitle ? setTitle(storedTabTitle) : null;
+    storedTabContent ? setTitle(storedTabContent) : null;
+    localStorage.removeItem("tabTitle");
+    localStorage.removeItem("tabContent");
+  }, []);
 
   return (
     <main
