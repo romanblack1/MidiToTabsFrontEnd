@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 type SavedTab = {
-  tab: Tab;
+  tabs: Tab;
 };
 
 type Tab = {
@@ -66,15 +66,15 @@ export default function Home() {
               <Link className="" href="/">
                 <button
                   onClick={() => {
-                    localStorage.setItem("tabTitle", savedTab.tab.name);
-                    localStorage.setItem("tabContent", savedTab.tab.tab);
+                    localStorage.setItem("tabTitle", savedTab.tabs.name);
+                    localStorage.setItem("tabContent", savedTab.tabs.tab);
                   }}
                 >
-                  {savedTab.tab.name}
+                  {savedTab.tabs.name}
                 </button>
               </Link>
               <span>
-                {savedTab.tab.created_by + ": " + savedTab.tab.created_at}
+                {savedTab.tabs.created_by + ": " + savedTab.tabs.created_at}
               </span>
               <div className="ml-auto">
                 <Image
@@ -87,7 +87,9 @@ export default function Home() {
                   height={24}
                   onClick={() => {
                     setSavedTabs(
-                      savedTabs.filter((tab) => tab.tab.id !== savedTab.tab.id)
+                      savedTabs.filter(
+                        (tab) => tab.tabs.id !== savedTab.tabs.id
+                      )
                     );
                     // todo: deleteTab(tabName);
                   }}

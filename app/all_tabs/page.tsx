@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 type SavedTab = {
-  tab: Tab;
+  tabs: Tab;
 };
 
 type Tab = {
@@ -48,13 +48,13 @@ export default function Home() {
   }, []);
 
   const toggleSaved = (tab: Tab) => {
-    if (savedTabs.some((savedTab) => savedTab.tab.id === tab.id)) {
+    if (savedTabs.some((savedTab) => savedTab.tabs.id === tab.id)) {
       // Remove tab if it's already saved
-      setSavedTabs(savedTabs.filter((cur_tab) => cur_tab.tab.id !== tab.id));
+      setSavedTabs(savedTabs.filter((cur_tab) => cur_tab.tabs.id !== tab.id));
       // todo: deleteTab(tabName);
     } else {
       // Add tab to savedTabs
-      setSavedTabs([...savedTabs, { tab }]);
+      setSavedTabs([...savedTabs, { tabs: tab }]);
       // todo: saveTab(tabName);
     }
   };
@@ -90,7 +90,7 @@ export default function Home() {
               <span>{all_tab.created_by + ": " + all_tab.created_at}</span>
               <div className="ml-auto">
                 {savedTabs.some(
-                  (savedTab) => savedTab.tab.id === all_tab.id
+                  (savedTab) => savedTab.tabs.id === all_tab.id
                 ) ? (
                   <Image
                     src="/saved.png"
