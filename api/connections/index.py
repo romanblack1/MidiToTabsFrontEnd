@@ -32,7 +32,7 @@ class handler(BaseHTTPRequestHandler):
 
         if user_id and tab_id:
             # Logic to get tabs specific to the userid from the database
-            supabase_response = supabase.table("users_saved_tabs").insert({"user_id": int(userid), "tab_id": tab_id}).execute()
+            supabase_response = supabase.table("users_saved_tabs").insert({"user_id": int(user_id), "tab_id": tab_id}).execute()
 
             connection_id = supabase_response.data[0]['id']
 
