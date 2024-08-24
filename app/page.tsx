@@ -16,15 +16,11 @@ export default function Home() {
     console.log(storedTabContent);
 
     storedTabTitle ? setTitle(storedTabTitle) : null;
-    storedTabContent ? setTitle(storedTabContent) : null;
+    storedTabContent ? setTab(storedTabContent) : null;
 
     console.log(storedTabTitle);
     console.log(storedTabContent);
-    console.log(title);
-    console.log(tab);
 
-    localStorage.removeItem("tabTitle");
-    localStorage.removeItem("tabContent");
     console.log(title);
     console.log(tab);
   }, []);
