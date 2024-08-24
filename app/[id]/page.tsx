@@ -70,15 +70,16 @@ export default function Home() {
 
           {savedTabs.map((savedTab, index) => (
             <React.Fragment key={index}>
-              <Link className="" href="/">
-                <button
-                  onClick={() => {
-                    localStorage.setItem("tabTitle", savedTab.tabs.name);
-                    localStorage.setItem("tabContent", savedTab.tabs.tab);
-                  }}
-                >
-                  {savedTab.tabs.name}
-                </button>
+              <Link
+                className=""
+                href="/"
+                onClick={() => {
+                  console.log("link clicked");
+                  localStorage.setItem("tabTitle", savedTab.tabs.name);
+                  localStorage.setItem("tabContent", savedTab.tabs.tab);
+                }}
+              >
+                {savedTab.tabs.name}
               </Link>
               <span>
                 {savedTab.tabs.created_by + ": " + savedTab.tabs.created_at}

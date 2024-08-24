@@ -107,6 +107,7 @@ export default function Home() {
                 <Link className="" href="/">
                   <button
                     onClick={() => {
+                      console.log("button clicked");
                       localStorage.setItem("tabTitle", all_tab.name);
                       localStorage.setItem("tabContent", all_tab.tab);
                     }}
