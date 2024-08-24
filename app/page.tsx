@@ -12,10 +12,21 @@ export default function Home() {
     const storedTabTitle = localStorage.getItem("tabTitle");
     const storedTabContent = localStorage.getItem("tabContent");
 
+    console.log(storedTabTitle);
+    console.log(storedTabContent);
+
     storedTabTitle ? setTitle(storedTabTitle) : null;
     storedTabContent ? setTitle(storedTabContent) : null;
+
+    console.log(storedTabTitle);
+    console.log(storedTabContent);
+    console.log(title);
+    console.log(tab);
+
     localStorage.removeItem("tabTitle");
     localStorage.removeItem("tabContent");
+    console.log(title);
+    console.log(tab);
   }, []);
 
   return (
