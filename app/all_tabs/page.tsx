@@ -95,7 +95,7 @@ export default function Home() {
   };
 
   const formatDate = (dateString: string): string => {
-      const isoTimestamp = dateString.replace(' ', 'T').slice(0, -3) + 'Z'; // "2024-08-21T23:05:57.581Z"
+      const isoTimestamp = dateString.replace(' ', 'T'); // "2024-08-21T23:05:57.581+00"
       const date = new Date(isoTimestamp); // Create a Date object from the ISO timestamp
       // Check if the date is valid
       if (isNaN(date.getTime())) {
