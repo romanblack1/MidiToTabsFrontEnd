@@ -32,21 +32,15 @@ export default function Home() {
   };
 
   // Example API call to create connection
-  const createConnection = async (userId: string, tabId: string) => {
-      const response = await fetch(`/api/connections?user_id=${userId}&tab_id=${tabId}`, {
-          method: "POST",
-      });
-      const data = await response.text();
-      console.log(data);
-  };
-
-  // Example API call to create connection
   const deleteConnection = async (userId: string, tabId: string) => {
-      const response = await fetch(`/api/connections?user_id=${userId}&tab_id=${tabId}`, {
-          method: "DELETE",
-      });
-      const data = await response.text();
-      console.log(data);
+    const response = await fetch(
+      `/api/connections?user_id=${userId}&tab_id=${tabId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    const data = await response.text();
+    console.log(data);
   };
 
   useEffect(() => {
@@ -104,7 +98,7 @@ export default function Home() {
                         (tab) => tab.tabs.id !== savedTab.tabs.id
                       )
                     );
-                    // todo: deleteTab(tabName);
+                    deleteConnection(userId, savedTab.tabs.id.toString());
                   }}
                 />
               </div>
