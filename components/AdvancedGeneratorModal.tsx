@@ -50,8 +50,13 @@ export default function AdvancedGeneratorModal({
     });
     const title_string = file.name.replace(".mid", "");
     let modified_title = title_string.replace(/_/g, " ").replace(/-/g, " ");
+    const response_text = await res.text();
+
     setTitle(modified_title);
-    setTab(await res.text());
+    setTab(response_text);
+    localStorage.setItem("tabTitle", title_string);
+    localStorage.setItem("tabContent", response_text);
+
     setModalDisplay("0");
   }
 

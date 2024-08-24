@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Modal.css";
 import Image from "next/image";
 
@@ -18,6 +18,16 @@ export default function GeneratorModal({
   channelInfo,
 }: GeneratorModalProps): JSX.Element {
   const [channelSelected, setChannelSelected] = useState(channelInfo[0][2]);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Access localStorage only in the browser
+    const storedUserId = localStorage.getItem("userId");
+
+    if (storedUserId) {
+      setUserId(storedUserId);
+    }
+  }, []);
 
   async function handleOnSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -37,16 +47,22 @@ export default function GeneratorModal({
       midiFileFormData.append("channelSelected", channelSelected.toString());
       midiFileFormData.append("tuningOffset", "0");
       midiFileFormData.append("capoOffset", "0");
+      midiFileFormData.append("userId", userId ? userId : "null");
     }
     //api call
-    const res = await fetch("/api", {
+    const res = await fetch("/api/generate", {
       method: "POST",
       body: midiFileFormData,
     });
     const title_string = file.name.replace(/\.mid$/i, "");
     let modified_title = title_string.replace(/_/g, " ").replace(/-/g, " ");
+    const response_text = await res.text();
+
     setTitle(modified_title);
-    setTab(await res.text());
+    setTab(response_text);
+    localStorage.setItem("tabTitle", title_string);
+    localStorage.setItem("tabContent", response_text);
+
     setModalDisplay("0");
   }
 
