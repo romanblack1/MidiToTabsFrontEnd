@@ -24,7 +24,6 @@ export default function RegisterCard() {
           password: "",
         }}
         onSubmit={async (values, actions) => {
-          // console.log({ values, actions });
           const loginFormData = new FormData();
           loginFormData.append("username", values.username);
           loginFormData.append("password", values.password);

@@ -95,14 +95,14 @@ export default function Home() {
   };
 
   const formatDate = (dateString: string): string => {
-      const isoTimestamp = dateString.replace(' ', 'T'); // "2024-08-21T23:05:57.581+00"
-      const date = new Date(isoTimestamp); // Create a Date object from the ISO timestamp
-      // Check if the date is valid
-      if (isNaN(date.getTime())) {
-          console.error('Invalid date:', isoTimestamp);
-          return 'Invalid date';
-      }
-      return new Intl.DateTimeFormat('en-US', options).format(date);
+    const isoTimestamp = dateString.replace(' ', 'T'); // "2024-08-21T23:05:57.581+00"
+    const date = new Date(isoTimestamp); // Create a Date object from the ISO timestamp
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+      console.error('Invalid date:', isoTimestamp);
+      return 'Invalid date';
+    }
+    return new Intl.DateTimeFormat('en-US', options).format(date);
   }
 
   return (
@@ -133,7 +133,7 @@ export default function Home() {
                     {all_tab.name}
                   </button>
                 </Link>
-                <span>{all_tab.created_by + ": " + formatDate(all_tab.created_at)}</span>
+                <span>{all_tab.created_by + " on " + formatDate(all_tab.created_at)}</span>
                 <div className="ml-auto">
                   {savedTabs.some(
                     (savedTab) => savedTab.tabs.id === all_tab.id
@@ -183,7 +183,7 @@ export default function Home() {
                   </button>
                 </Link>
 
-                <span>{all_tab.created_by + ": " + all_tab.created_at}</span>
+                <span>{all_tab.created_by + " on " + formatDate(all_tab.created_at)}</span>
               </React.Fragment>
             ))}
           </div>
