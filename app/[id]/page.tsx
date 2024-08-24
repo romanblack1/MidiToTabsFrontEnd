@@ -4,6 +4,18 @@ import NavBar from "../../components/NavBar";
 import Image from "next/image";
 import Link from "next/link";
 
+// Define formatting options for a date
+const options: Intl.DateTimeFormatOptions = {
+    month: 'numeric',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true, // Use 12-hour clock
+    timeZoneName: 'short' // Include the short time zone name (e.g., PST)
+};
+
 type SavedTab = {
   tabs: Tab;
 };
@@ -27,7 +39,6 @@ export default function Home() {
       method: "GET",
     });
     const data = await response.json();
-    console.log(data);
     setSavedTabs(data);
   };
 
@@ -40,7 +51,6 @@ export default function Home() {
       }
     );
     const data = await response.text();
-    console.log(data);
   };
 
   useEffect(() => {
@@ -51,6 +61,17 @@ export default function Home() {
 
   if (!userId) {
     return <div>Loading...</div>;
+  }
+
+  const formatDate = (dateString: string): string => {
+    const isoTimestamp = dateString.replace(' ', 'T'); // "2024-08-21T23:05:57.581+00"
+    const date = new Date(isoTimestamp); // Create a Date object from the ISO timestamp
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+      console.error('Invalid date:', isoTimestamp);
+      return 'Invalid date';
+    }
+    return new Intl.DateTimeFormat('en-US', options).format(date);
   }
 
   return (
@@ -82,7 +103,7 @@ export default function Home() {
                 {savedTab.tabs.name}
               </Link>
               <span>
-                {savedTab.tabs.created_by + ": " + savedTab.tabs.created_at}
+                {savedTab.tabs.created_by + " on " + formatDate(savedTab.tabs.created_at)}
               </span>
               <div className="ml-auto">
                 <Image
