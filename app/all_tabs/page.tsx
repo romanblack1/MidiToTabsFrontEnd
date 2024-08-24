@@ -4,6 +4,18 @@ import NavBar from "../../components/NavBar";
 import Image from "next/image";
 import Link from "next/link";
 
+// Define formatting options for a date
+const options: Intl.DateTimeFormatOptions = {
+    month: 'numeric',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true, // Use 12-hour clock
+    timeZoneName: 'short' // Include the short time zone name (e.g., PST)
+};
+
 type SavedTab = {
   tabs: Tab;
 };
@@ -28,7 +40,6 @@ export default function Home() {
     });
 
     const data = await response.json();
-    console.log(data);
     setAllTabs(data);
   };
 
@@ -38,7 +49,6 @@ export default function Home() {
       method: "GET",
     });
     const data = await response.json();
-    console.log(data);
     setSavedTabs(data);
   };
 
@@ -59,7 +69,6 @@ export default function Home() {
       }
     );
     const data = await response.text();
-    console.log(data);
   };
 
   // Example API call to create connection
@@ -71,7 +80,6 @@ export default function Home() {
       }
     );
     const data = await response.text();
-    console.log(data);
   };
 
   const toggleSaved = (userId: string, tab: Tab) => {
@@ -85,6 +93,12 @@ export default function Home() {
       createConnection(userId, tab.id.toString());
     }
   };
+
+  const formatDate = (dateString: string): string => {
+      const isoTimestamp = dateString.replace(' ', 'T').slice(0, -3) + 'Z'; // "2024-08-21T23:05:57.581Z"
+      const date = new Date(isoTimestamp); // Create a Date object from the ISO timestamp
+      return new Intl.DateTimeFormat('en-US', options).format(date);
+  }
 
   return (
     <main
@@ -114,8 +128,7 @@ export default function Home() {
                     {all_tab.name}
                   </button>
                 </Link>
-
-                <span>{all_tab.created_by + ": " + all_tab.created_at}</span>
+                <span>{all_tab.created_by + ": " + formatDate(all_tab.created_at)}</span>
                 <div className="ml-auto">
                   {savedTabs.some(
                     (savedTab) => savedTab.tabs.id === all_tab.id
