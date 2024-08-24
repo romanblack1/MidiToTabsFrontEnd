@@ -6,14 +6,14 @@ import Link from "next/link";
 
 // Define formatting options for a date
 const options: Intl.DateTimeFormatOptions = {
-    month: 'numeric',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    hour12: true, // Use 12-hour clock
-    timeZoneName: 'short' // Include the short time zone name (e.g., PST)
+  month: "numeric",
+  day: "numeric",
+  year: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
+  hour12: true, // Use 12-hour clock
+  timeZoneName: "short", // Include the short time zone name (e.g., PST)
 };
 
 type SavedTab = {
@@ -64,15 +64,15 @@ export default function Home() {
   }
 
   const formatDate = (dateString: string): string => {
-    const isoTimestamp = dateString.replace(' ', 'T'); // "2024-08-21T23:05:57.581+00"
+    const isoTimestamp = dateString.replace(" ", "T"); // "2024-08-21T23:05:57.581+00"
     const date = new Date(isoTimestamp); // Create a Date object from the ISO timestamp
     // Check if the date is valid
     if (isNaN(date.getTime())) {
-      console.error('Invalid date:', isoTimestamp);
-      return 'Invalid date';
+      console.error("Invalid date:", isoTimestamp);
+      return "Invalid date";
     }
-    return new Intl.DateTimeFormat('en-US', options).format(date);
-  }
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  };
 
   return (
     <main
@@ -95,7 +95,6 @@ export default function Home() {
                 className=""
                 href="/"
                 onClick={() => {
-                  console.log("link clicked");
                   localStorage.setItem("tabTitle", savedTab.tabs.name);
                   localStorage.setItem("tabContent", savedTab.tabs.tab);
                 }}
@@ -103,7 +102,9 @@ export default function Home() {
                 {savedTab.tabs.name}
               </Link>
               <span>
-                {savedTab.tabs.created_by + " on " + formatDate(savedTab.tabs.created_at)}
+                {savedTab.tabs.created_by +
+                  " on " +
+                  formatDate(savedTab.tabs.created_at)}
               </span>
               <div className="ml-auto">
                 <Image

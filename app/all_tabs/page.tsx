@@ -6,14 +6,14 @@ import Link from "next/link";
 
 // Define formatting options for a date
 const options: Intl.DateTimeFormatOptions = {
-    month: 'numeric',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    hour12: true, // Use 12-hour clock
-    timeZoneName: 'short' // Include the short time zone name (e.g., PST)
+  month: "numeric",
+  day: "numeric",
+  year: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
+  hour12: true, // Use 12-hour clock
+  timeZoneName: "short", // Include the short time zone name (e.g., PST)
 };
 
 type SavedTab = {
@@ -95,15 +95,15 @@ export default function Home() {
   };
 
   const formatDate = (dateString: string): string => {
-    const isoTimestamp = dateString.replace(' ', 'T'); // "2024-08-21T23:05:57.581+00"
+    const isoTimestamp = dateString.replace(" ", "T"); // "2024-08-21T23:05:57.581+00"
     const date = new Date(isoTimestamp); // Create a Date object from the ISO timestamp
     // Check if the date is valid
     if (isNaN(date.getTime())) {
-      console.error('Invalid date:', isoTimestamp);
-      return 'Invalid date';
+      console.error("Invalid date:", isoTimestamp);
+      return "Invalid date";
     }
-    return new Intl.DateTimeFormat('en-US', options).format(date);
-  }
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  };
 
   return (
     <main
@@ -121,23 +121,24 @@ export default function Home() {
             <span>Created By</span>
             <span className="ml-auto">Saved</span>
 
-            {allTabs.map((all_tab, index) => (
+            {allTabs.map((allTab, index) => (
               <React.Fragment key={index}>
-                <Link className="" href="/">
-                  <button
-                    onClick={() => {
-                      console.log("button clicked");
-                      localStorage.setItem("tabTitle", all_tab.name);
-                      localStorage.setItem("tabContent", all_tab.tab);
-                    }}
-                  >
-                    {all_tab.name}
-                  </button>
+                <Link
+                  className=""
+                  href="/"
+                  onClick={() => {
+                    localStorage.setItem("tabTitle", allTab.name);
+                    localStorage.setItem("tabContent", allTab.tab);
+                  }}
+                >
+                  {allTab.name}
                 </Link>
-                <span>{all_tab.created_by + " on " + formatDate(all_tab.created_at)}</span>
+                <span>
+                  {allTab.created_by + " on " + formatDate(allTab.created_at)}
+                </span>
                 <div className="ml-auto">
                   {savedTabs.some(
-                    (savedTab) => savedTab.tabs.id === all_tab.id
+                    (savedTab) => savedTab.tabs.id === allTab.id
                   ) ? (
                     <Image
                       src="/saved.png"
@@ -146,7 +147,7 @@ export default function Home() {
                       width={24}
                       height={24}
                       onClick={() => {
-                        toggleSaved(userId, all_tab);
+                        toggleSaved(userId, allTab);
                       }}
                     />
                   ) : (
@@ -157,7 +158,7 @@ export default function Home() {
                       width={24}
                       height={24}
                       onClick={() => {
-                        toggleSaved(userId, all_tab);
+                        toggleSaved(userId, allTab);
                       }}
                       priority
                     />
@@ -171,20 +172,21 @@ export default function Home() {
             <span>Name</span>
             <span>Created By</span>
 
-            {allTabs.map((all_tab, index) => (
+            {allTabs.map((allTab, index) => (
               <React.Fragment key={index}>
-                <Link className="" href="/">
-                  <button
-                    onClick={() => {
-                      localStorage.setItem("tabTitle", all_tab.name);
-                      localStorage.setItem("tabContent", all_tab.tab);
-                    }}
-                  >
-                    {all_tab.name}
-                  </button>
+                <Link
+                  className=""
+                  href="/"
+                  onClick={() => {
+                    localStorage.setItem("tabTitle", allTab.name);
+                    localStorage.setItem("tabContent", allTab.tab);
+                  }}
+                >
+                  {allTab.name}
                 </Link>
-
-                <span>{all_tab.created_by + " on " + formatDate(all_tab.created_at)}</span>
+                <span>
+                  {allTab.created_by + " on " + formatDate(allTab.created_at)}
+                </span>
               </React.Fragment>
             ))}
           </div>
