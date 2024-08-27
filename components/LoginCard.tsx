@@ -25,7 +25,6 @@ export default function LoginCard() {
           password: "",
         }}
         onSubmit={async (values, actions) => {
-          console.log({ values, actions });
           const loginFormData = new FormData();
           loginFormData.append("username", values.username);
           loginFormData.append("password", values.password);
@@ -34,7 +33,11 @@ export default function LoginCard() {
             method: "POST",
             body: loginFormData,
           });
-          alert(await res.text());
+          const data = await res.json(); // Parse the JSON response
+          alert(data.message); // Alert the message from the response
+          localStorage.setItem("userId", data.userId);
+          localStorage.setItem("username", values.username);
+          window.location.reload();
           actions.setSubmitting(false);
         }}
       >
