@@ -40,7 +40,8 @@ export default function Home() {
     });
 
     const data = await response.json();
-    console.log(response.text);
+    console.log(response.text());
+    console.log(response.json());
     setAllTabs(data);
   };
 
