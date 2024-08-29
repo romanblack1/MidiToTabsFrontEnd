@@ -35,9 +35,13 @@ export default function LoginCard() {
           });
           const data = await res.json(); // Parse the JSON response
           alert(data.message); // Alert the message from the response
-          localStorage.setItem("userId", data.userId);
-          localStorage.setItem("username", values.username);
-          window.location.reload();
+
+          if (res.status === 200) {
+            data.localStorage.setItem("userId", data.userId);
+            localStorage.setItem("username", values.username);
+            window.location.reload();
+          }
+
           actions.setSubmitting(false);
         }}
       >
