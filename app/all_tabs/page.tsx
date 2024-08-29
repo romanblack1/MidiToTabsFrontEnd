@@ -64,7 +64,7 @@ export default function Home() {
 
   // create shallow copy of allTabs to sort
   const sortedAllTabs = useMemo(() => {
-    return allTabs.toSorted(compareFn(sortOption));
+    return allTabs.slice().sort(compareFn(sortOption));
   }, [allTabs, sortOption]);
 
   // create shallow copy of sortedAllTabs to filter
