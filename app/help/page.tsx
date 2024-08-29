@@ -20,6 +20,15 @@ export default function Home() {
         </div>
         <br />
         <div className="w-2/3">
+          Unsure which track to choose? Use this tool to identify the sounds each
+          track contains: https://signal.vercel.app/edit. Just upload your midi 
+          file and click through the displayed tracks to figure out which sounds 
+          you want to be tabulated! The tracks will display what instrument is 
+          being played, so pick that one from the list given to you when generating 
+          your tab.
+        </div>
+        <br />
+        <div className="w-2/3">
           Have an audio file but not a midi file? Use this tool to convert the
           audio file: https://basicpitch.spotify.com/
         </div>
