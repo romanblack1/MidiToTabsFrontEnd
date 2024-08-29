@@ -38,7 +38,7 @@ export async function POST(request: Request): Promise<Response> {
             return new Response(error.message, { status: 500 });
         }
 
-        return new Response("New user has been stored in Supabase database", { status: 200 });
+        return new Response("Successfully Registered!", { status: 200 });
     } catch (error) {
         console.error(error);
         if (error instanceof Error) {
