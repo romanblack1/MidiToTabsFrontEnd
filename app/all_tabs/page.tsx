@@ -155,7 +155,7 @@ export default function Home() {
 
   return (
     <main
-      className="flex flex-col dark:bg-slate-700 mt-14 mb-5 "
+      className="flex flex-col dark:bg-slate-700 mt-14 mb-5 overflow-x-hidden"
       style={{
         minHeight: "calc(100vh - 4.75rem)",
       }}
