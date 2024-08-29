@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 import NavBar from "../../components/NavBar";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,10 +28,51 @@ type Tab = {
   created_at: string;
 };
 
+const compareDates = (a: Tab, b: Tab) => {
+  const dateA = new Date(a.created_at.replace(" ", "T"));
+  const dateB = new Date(b.created_at.replace(" ", "T"));
+  return dateB.getTime() - dateA.getTime(); // Newest to Oldest
+};
+
+// function to sort tabs based on selected option
+const compareFn = (sortOption: string) => (input1: SavedTab, input2: SavedTab) => {
+  const a = input1.tabs;
+  const b = input2.tabs;
+  switch (sortOption) {
+    case "Newest to Oldest":
+    default:
+      return compareDates(a, b);
+    case "Oldest to Newest":
+      return compareDates(b, a);
+    case "A-Z":
+      return a.name.localeCompare(b.name);
+    case "Z-A":
+      return b.name.localeCompare(a.name);
+  }
+}
+
+// function to filter tabs based on search bar query
+const filterFn = (searchQuery: string) => (a: SavedTab) => {
+    return a.tabs.name.toLowerCase().includes(searchQuery);
+}
+
 export default function Home() {
   const [savedTabs, setSavedTabs] = useState<SavedTab[]>([]);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  // set default sort state
+  const [sortOption, setSortOption] = useState<string>("Newest to Oldest");
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // create shallow copy of savedTabs to sort
+  const sortedSavedTabs = useMemo(() => {
+    return savedTabs.toSorted(compareFn(sortOption));
+  }, [savedTabs, sortOption]);
+
+  // create shallow copy of sortedSavedTabs to filter
+  const filteredSortedSavedTabs = useMemo(() => {
+    return sortedSavedTabs.filter(filterFn(searchQuery));
+  }, [sortedSavedTabs, searchQuery]);
 
   const fetchUserData = async (userId: string) => {
     // Example API call to get user data
@@ -53,6 +94,7 @@ export default function Home() {
     const data = await response.text();
   };
 
+  // set tabs with data from database
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     setUserId(storedUserId);
@@ -74,6 +116,16 @@ export default function Home() {
     return new Intl.DateTimeFormat("en-US", options).format(date);
   };
 
+  // Handle dropdown change with type annotation
+  const handleSortChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSortOption(event.target.value);
+  };
+
+  // Function to handle search input changes
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value.toLowerCase());
+  };
+
   return (
     <main
       className="flex flex-col dark:bg-slate-700 mt-14 mb-5 "
@@ -84,13 +136,43 @@ export default function Home() {
       <NavBar />
       <div className="flex flex-col items-center justify-around w-screen">
         <h1 className="font-bold text-3xl m-3">My Saved Tabs</h1>
+
+        <div className="mb-4 flex items-center">
+          {/* Dropdown for sorting */}
+          <div className="mb-4">
+            <label htmlFor="sortOptions" className="mr-2">Sort by:</label>
+            <select
+              style={{ color: 'black', lineHeight: '1.5'}}
+              id="sortOptions"
+              value={sortOption}
+              onChange={handleSortChange}
+              className="p-2 border rounded"
+            >
+              <option value="Newest to Oldest">Newest to Oldest</option>
+              <option value="Oldest to Newest">Oldest to Newest</option>
+              <option value="A-Z">A-Z</option>
+              <option value="Z-A">Z-A</option>
+            </select>
+          </div>
+          
+          {/* Search Bar */}
+          <input
+            type="text"
+            placeholder="Search tabs..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="p-2 border rounded ml-6"
+            style={{ color: 'black', lineHeight: '1.5', position: 'relative', bottom: '8px'}}
+          />
+        </div>
+
         <div className="grid grid-cols-3 gap-3">
           <span>Name</span>
           <span>Created By</span>
           <span className="ml-auto">Saved</span>
 
-          {savedTabs.map((savedTab, index) => (
-            <React.Fragment key={index}>
+          {filteredSortedSavedTabs.map((savedTab) => (
+            <React.Fragment key={savedTab.tabs.id}>
               <Link
                 className=""
                 href="/"
@@ -108,11 +190,11 @@ export default function Home() {
               </span>
               <div className="ml-auto">
                 <Image
-                  src={hoveredIndex === index ? "/trash.png" : "/saved.png"}
+                  src={hoveredId === savedTab.tabs.id ? "/trash.png" : "/saved.png"}
                   alt="saved tab"
                   className="dark:invert"
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
+                  onMouseEnter={() => setHoveredId(savedTab.tabs.id)}
+                  onMouseLeave={() => setHoveredId(null)}
                   width={24}
                   height={24}
                   onClick={() => {
