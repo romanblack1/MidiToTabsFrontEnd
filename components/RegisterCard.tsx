@@ -57,7 +57,7 @@ export default function RegisterCard() {
             Submit
           </button>
           <Link
-            className="mr-auto text-black text-2xl font-semibold dark:text-slate-200"
+            className="mr-auto text-black text-2xl font-semibold dark:text-slate-500"
             href="/login"
           >
             Login
