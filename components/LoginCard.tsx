@@ -37,7 +37,7 @@ export default function LoginCard() {
           alert(data.message); // Alert the message from the response
 
           if (res.status === 200) {
-            data.localStorage.setItem("userId", data.userId);
+            localStorage.setItem("userId", data.userId);
             localStorage.setItem("username", values.username);
             window.location.reload();
           }
