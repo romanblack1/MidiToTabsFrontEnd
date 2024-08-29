@@ -51,7 +51,7 @@ export default function RegisterCard() {
             placeholder="Password"
           />
           <button
-            className="text-2xl font-bold dark:text-slate-500"
+            className="text-2xl font-bold"
             type="submit"
           >
             Submit
