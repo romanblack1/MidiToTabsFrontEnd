@@ -9,17 +9,6 @@ interface NavBarProps {
 }
 
 export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
-  const tabs = ["1", "3", "5", "6", "7", "11", "12", "18", "aaaaa", "aabaa"];
-  const [tabSearch, setTabSearch] = useState<string[]>([]);
-  const handleTabSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value == "") {
-      setTabSearch([]);
-      return false;
-    } else {
-      setTabSearch(tabs.filter((w) => w.includes(e.target.value)).slice(0, 4));
-    }
-  };
-
   const [userId, setUserId] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
 

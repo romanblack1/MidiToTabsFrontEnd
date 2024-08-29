@@ -183,14 +183,16 @@ export default function Home() {
           </div>
           
           {/* Search Bar */}
-          <input
-            type="text"
-            placeholder="Search tabs..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="p-2 border rounded ml-6"
-            style={{ color: 'black', lineHeight: '1.5', position: 'relative', bottom: '8px'}}
-          />
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search tabs..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="p-2 border rounded ml-6"
+              style={{ color: 'black', lineHeight: '1.5', position: 'relative', zIndex: '0'}}
+            />
+          </div>
         </div>
 
         {userId ? (
