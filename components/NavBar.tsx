@@ -51,12 +51,13 @@ export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
         </Link>
         {username ? (
           <Link className="mr-4" href={`/${userId}`}>
-            My Tabs
+            {username}
           </Link>
-        ) : null}
-        <Link className="" href="/login">
-          {username ? username : "Login"}
-        </Link>
+        ) : (
+          <Link className="" href="/login">
+            Login
+          </Link>
+        )}
       </div>
     </div>
   );
