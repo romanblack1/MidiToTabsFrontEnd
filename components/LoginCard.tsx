@@ -2,8 +2,15 @@ import { Formik, Field, Form } from "formik";
 import Link from "next/link";
 import Image from "next/image";
 import "./LoginRegisterCard.css";
+import { useRouter } from "next/navigation";
 
 export default function LoginCard() {
+  const router = useRouter();
+
+  const handleNavigation = (path: string) => {
+    router.push(path); // Navigate to the specified path
+  };
+
   return (
     <div className="group rounded-lg bg-gray-300 px-5 py-4 transition-colors flex flex-col justify-center items-center dark:bg-slate-600 relative">
       <h1 className="font-bold text-3xl mb-7">Login</h1>
@@ -39,7 +46,7 @@ export default function LoginCard() {
           if (res.status === 200) {
             localStorage.setItem("userId", data.userId);
             localStorage.setItem("username", values.username);
-            window.location.reload();
+            handleNavigation("/userId");
           }
 
           actions.setSubmitting(false);

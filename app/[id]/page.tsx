@@ -3,6 +3,7 @@ import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 import NavBar from "../../components/NavBar";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // Define formatting options for a date
 const options: Intl.DateTimeFormatOptions = {
@@ -35,26 +36,27 @@ const compareDates = (a: Tab, b: Tab) => {
 };
 
 // function to sort tabs based on selected option
-const compareFn = (sortOption: string) => (input1: SavedTab, input2: SavedTab) => {
-  const a = input1.tabs;
-  const b = input2.tabs;
-  switch (sortOption) {
-    case "Newest to Oldest":
-    default:
-      return compareDates(a, b);
-    case "Oldest to Newest":
-      return compareDates(b, a);
-    case "A-Z":
-      return a.name.localeCompare(b.name);
-    case "Z-A":
-      return b.name.localeCompare(a.name);
-  }
-}
+const compareFn =
+  (sortOption: string) => (input1: SavedTab, input2: SavedTab) => {
+    const a = input1.tabs;
+    const b = input2.tabs;
+    switch (sortOption) {
+      case "Newest to Oldest":
+      default:
+        return compareDates(a, b);
+      case "Oldest to Newest":
+        return compareDates(b, a);
+      case "A-Z":
+        return a.name.localeCompare(b.name);
+      case "Z-A":
+        return b.name.localeCompare(a.name);
+    }
+  };
 
 // function to filter tabs based on search bar query
 const filterFn = (searchQuery: string) => (a: SavedTab) => {
-    return a.tabs.name.toLowerCase().includes(searchQuery);
-}
+  return a.tabs.name.toLowerCase().includes(searchQuery);
+};
 
 export default function Home() {
   const [savedTabs, setSavedTabs] = useState<SavedTab[]>([]);
@@ -62,7 +64,13 @@ export default function Home() {
   const [userId, setUserId] = useState<string | null>(null);
   // set default sort state
   const [sortOption, setSortOption] = useState<string>("Newest to Oldest");
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const router = useRouter();
+
+  const handleNavigation = (path: string) => {
+    router.push(path); // Navigate to the specified path
+  };
 
   // create shallow copy of savedTabs to sort
   const sortedSavedTabs = useMemo(() => {
@@ -212,6 +220,16 @@ export default function Home() {
             </React.Fragment>
           ))}
         </div>
+        <button
+          className="rounded-lg bg-gray-300 px-5 py-2 mt-2 hover:border-gray-200 hover:bg-gray-400 dark:border-neutral-500 dark:bg-gray-600"
+          onClick={() => {
+            localStorage.removeItem("userId");
+            localStorage.removeItem("username");
+            handleNavigation("/login");
+          }}
+        >
+          Log Out
+        </button>
       </div>
     </main>
   );
