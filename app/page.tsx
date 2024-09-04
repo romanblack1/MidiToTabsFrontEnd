@@ -28,6 +28,6 @@ export default function Home() {
         {tab && title ? <TabDisplay tab={tab} title={title} /> : null}
         <ModalButton setTab={setTab} setTitle={setTitle} />
       </div>
-    </main> 
+    </main>
   );
 }

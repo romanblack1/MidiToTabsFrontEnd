@@ -60,6 +60,7 @@ const filterFn = (searchQuery: string) => (a: SavedTab) => {
 
 export default function Home() {
   const [savedTabs, setSavedTabs] = useState<SavedTab[]>([]);
+  const [loadingSavedTabs, setLoadingSavedTabs] = useState<boolean>(true);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   // set default sort state
@@ -106,7 +107,11 @@ export default function Home() {
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     setUserId(storedUserId);
-    storedUserId ? fetchUserData(storedUserId) : null;
+    if (storedUserId) {
+      fetchUserData(storedUserId).finally(() => setLoadingSavedTabs(false));
+    } else {
+      setLoadingSavedTabs(false);
+    }
   }, []);
 
   if (!userId) {
@@ -145,81 +150,108 @@ export default function Home() {
       <div className="flex flex-col items-center justify-around w-screen">
         <h1 className="font-bold text-3xl m-3">My Saved Tabs</h1>
 
-        <div className="mb-4 flex items-center">
-          {/* Dropdown for sorting */}
-          <div className="mb-4">
-            <label htmlFor="sortOptions" className="mr-2">Sort by:</label>
-            <select
-              style={{ color: 'black', lineHeight: '1.5'}}
-              id="sortOptions"
-              value={sortOption}
-              onChange={handleSortChange}
-              className="p-2 border rounded"
-            >
-              <option value="Newest to Oldest">Newest to Oldest</option>
-              <option value="Oldest to Newest">Oldest to Newest</option>
-              <option value="A-Z">A-Z</option>
-              <option value="Z-A">Z-A</option>
-            </select>
+        {loadingSavedTabs ? (
+          <Image
+            src="/bouncing-squares.svg"
+            alt="loading"
+            width={30}
+            height={30}
+            priority
+          />
+        ) : savedTabs.length === 0 ? (
+          <div className="m-6">
+            Looks like you have no saved tabs, try creating a tab from the home
+            page or saving a tab from the All Tabs page!
           </div>
-          
-          {/* Search Bar */}
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Search tabs..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="p-2 border rounded ml-6"
-              style={{ color: 'black', lineHeight: '1.5', position: 'relative'}}
-            />
-          </div>
-        </div>
+        ) : (
+          <React.Fragment key={"savedTabs"}>
+            <div className="mb-4 flex items-center">
+              {/* Dropdown for sorting */}
+              <div className="mb-4">
+                <label htmlFor="sortOptions" className="mr-2">
+                  Sort by:
+                </label>
+                <select
+                  style={{ color: "black", lineHeight: "1.5" }}
+                  id="sortOptions"
+                  value={sortOption}
+                  onChange={handleSortChange}
+                  className="p-2 border rounded"
+                >
+                  <option value="Newest to Oldest">Newest to Oldest</option>
+                  <option value="Oldest to Newest">Oldest to Newest</option>
+                  <option value="A-Z">A-Z</option>
+                  <option value="Z-A">Z-A</option>
+                </select>
+              </div>
 
-        <div className="grid grid-cols-3 gap-3">
-          <span>Name</span>
-          <span>Created By</span>
-          <span className="ml-auto">Saved</span>
-
-          {filteredSortedSavedTabs.map((savedTab) => (
-            <React.Fragment key={savedTab.tabs.id}>
-              <Link
-                className=""
-                href="/"
-                onClick={() => {
-                  localStorage.setItem("tabTitle", savedTab.tabs.name);
-                  localStorage.setItem("tabContent", savedTab.tabs.tab);
-                }}
-              >
-                {savedTab.tabs.name}
-              </Link>
-              <span>
-                {savedTab.tabs.created_by +
-                  " on " +
-                  formatDate(savedTab.tabs.created_at)}
-              </span>
-              <div className="ml-auto">
-                <Image
-                  src={hoveredId === savedTab.tabs.id ? "/trash.png" : "/saved.png"}
-                  alt="saved tab"
-                  className="dark:invert"
-                  onMouseEnter={() => setHoveredId(savedTab.tabs.id)}
-                  onMouseLeave={() => setHoveredId(null)}
-                  width={24}
-                  height={24}
-                  onClick={() => {
-                    setSavedTabs(
-                      savedTabs.filter(
-                        (tab) => tab.tabs.id !== savedTab.tabs.id
-                      )
-                    );
-                    deleteConnection(userId, savedTab.tabs.id.toString());
+              {/* Search Bar */}
+              <div className="mb-4">
+                <input
+                  type="text"
+                  placeholder="Search tabs..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className="p-2 border rounded ml-6"
+                  style={{
+                    color: "black",
+                    lineHeight: "1.5",
+                    position: "relative",
                   }}
                 />
               </div>
-            </React.Fragment>
-          ))}
-        </div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <span>Name</span>
+              <span>Created By</span>
+              <span className="ml-auto">Saved</span>
+
+              {filteredSortedSavedTabs.map((savedTab) => (
+                <React.Fragment key={savedTab.tabs.id}>
+                  <Link
+                    className=""
+                    href="/"
+                    onClick={() => {
+                      localStorage.setItem("tabTitle", savedTab.tabs.name);
+                      localStorage.setItem("tabContent", savedTab.tabs.tab);
+                    }}
+                  >
+                    {savedTab.tabs.name}
+                  </Link>
+                  <span>
+                    {savedTab.tabs.created_by +
+                      " on " +
+                      formatDate(savedTab.tabs.created_at)}
+                  </span>
+                  <div className="ml-auto">
+                    <Image
+                      src={
+                        hoveredId === savedTab.tabs.id
+                          ? "/trash.png"
+                          : "/saved.png"
+                      }
+                      alt="saved tab"
+                      className="dark:invert"
+                      onMouseEnter={() => setHoveredId(savedTab.tabs.id)}
+                      onMouseLeave={() => setHoveredId(null)}
+                      width={24}
+                      height={24}
+                      onClick={() => {
+                        setSavedTabs(
+                          savedTabs.filter(
+                            (tab) => tab.tabs.id !== savedTab.tabs.id
+                          )
+                        );
+                        deleteConnection(userId, savedTab.tabs.id.toString());
+                      }}
+                    />
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+          </React.Fragment>
+        )}
+
         <button
           className="rounded-lg bg-gray-300 px-5 py-2 mt-2 hover:border-gray-200 hover:bg-gray-400 dark:border-neutral-500 dark:bg-gray-600"
           onClick={() => {

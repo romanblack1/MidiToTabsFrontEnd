@@ -47,20 +47,21 @@ const compareFn = (sortOption: string) => (a: Tab, b: Tab) => {
     case "Z-A":
       return b.name.localeCompare(a.name);
   }
-}
+};
 
 // function to filter tabs based on search bar query
 const filterFn = (searchQuery: string) => (a: Tab) => {
-    return a.name.toLowerCase().includes(searchQuery);
-}
+  return a.name.toLowerCase().includes(searchQuery);
+};
 
 export default function Home() {
   const [allTabs, setAllTabs] = useState<Tab[]>([]);
+  const [loadingTabs, setLoadingTabs] = useState<boolean>(true);
   const [savedTabs, setSavedTabs] = useState<SavedTab[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   // set default sort state
   const [sortOption, setSortOption] = useState<string>("Newest to Oldest");
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   // create shallow copy of allTabs to sort
   const sortedAllTabs = useMemo(() => {
@@ -95,7 +96,11 @@ export default function Home() {
     fetchAllTabs();
     const storedUserId = localStorage.getItem("userId");
     setUserId(storedUserId);
-    storedUserId ? fetchSavedTabs(storedUserId) : null;
+    if (storedUserId) {
+      fetchSavedTabs(storedUserId).finally(() => setLoadingTabs(false));
+    } else {
+      setLoadingTabs(false);
+    }
   }, []);
 
   // Example API call to create connection
@@ -167,9 +172,11 @@ export default function Home() {
         <div className="mb-4 flex items-center">
           {/* Dropdown for sorting */}
           <div className="mb-4">
-            <label htmlFor="sortOptions" className="mr-2">Sort by:</label>
+            <label htmlFor="sortOptions" className="mr-2">
+              Sort by:
+            </label>
             <select
-              style={{ color: 'black', lineHeight: '1.5'}}
+              style={{ color: "black", lineHeight: "1.5" }}
               id="sortOptions"
               value={sortOption}
               onChange={handleSortChange}
@@ -181,7 +188,7 @@ export default function Home() {
               <option value="Z-A">Z-A</option>
             </select>
           </div>
-          
+
           {/* Search Bar */}
           <div className="mb-4">
             <input
@@ -190,12 +197,25 @@ export default function Home() {
               value={searchQuery}
               onChange={handleSearchChange}
               className="p-2 border rounded ml-6"
-              style={{ color: 'black', lineHeight: '1.5', position: 'relative', zIndex: '0'}}
+              style={{
+                color: "black",
+                lineHeight: "1.5",
+                position: "relative",
+                zIndex: "0",
+              }}
             />
           </div>
         </div>
 
-        {userId ? (
+        {loadingTabs ? (
+          <Image
+            src="/bouncing-squares.svg"
+            alt="loading"
+            width={30}
+            height={30}
+            priority
+          />
+        ) : userId ? (
           <div className="grid grid-cols-3 gap-3">
             <span>Name</span>
             <span>Created By</span>
