@@ -37,6 +37,11 @@ export default function Home() {
         "Logging in credits you with tabs you create, and allows you to save specific tabs from the all tabs page to your account",
       open: false,
     },
+    {
+      question: "I need specific help, how can I contact support?",
+      answer: "Contact us at miditotabs@gmail.com",
+      open: false,
+    },
   ]);
 
   const toggleFAQ = (index: number) => {
