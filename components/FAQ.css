@@ -57,3 +57,9 @@
 	max-height: 1000px;
 	opacity: 1;
 }
+
+@media (prefers-color-scheme: dark) {
+    .faqs .faq {
+        background-color: rgb(71 85 105);
+    }
+}
