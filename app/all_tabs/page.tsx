@@ -93,14 +93,15 @@ export default function Home() {
 
   // set tabs with data from database
   useEffect(() => {
-    fetchAllTabs();
     const storedUserId = localStorage.getItem("userId");
     setUserId(storedUserId);
+
+    const fetchTasks = [fetchAllTabs()]; // Always fetch all tabs
     if (storedUserId) {
-      fetchSavedTabs(storedUserId).finally(() => setLoadingTabs(false));
-    } else {
-      setLoadingTabs(false);
+      fetchTasks.push(fetchSavedTabs(storedUserId)); // Add fetching saved tabs if user is logged in
     }
+
+    Promise.all(fetchTasks).finally(() => setLoadingTabs(false)); // Set loading to false only after all promises complete
   }, []);
 
   // Example API call to create connection
