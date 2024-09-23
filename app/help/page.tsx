@@ -59,7 +59,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col justify-center justify-items-center items-center dark:bg-slate-700 mt-14 mb-5">
+    <main className="flex flex-col justify-center justify-items-center items-center dark:bg-slate-700 pt-14 pb-5 min-h-screen">
       <NavBar />
       <h1 className="font-bold text-3xl">FAQs</h1>
       <div className="faqs">
