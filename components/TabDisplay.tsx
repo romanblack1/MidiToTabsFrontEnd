@@ -12,12 +12,14 @@ export default function TabDisplay({ tab, title }: ModalProps): JSX.Element {
     <div className="flex flex-col items-center justify-between w-11/12">
       <h1 className="font-bold text-3xl m-3">{title}</h1>
       <div
-        className="text-xs flex overflow-x-auto max-w-2/3"
+        className="text-xs flex overflow-x-auto w-full"
         style={{
           fontFamily: "Courier New, Courier, monospace",
         }}
       >
-        <pre>{tab}</pre>
+        <div className="mx-auto">
+          <pre className="w-auto min-w-fit">{tab}</pre>
+        </div>
       </div>
 
       <PDFDownloadLink

@@ -17,12 +17,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main
-      className="flex flex-col justify-around dark:bg-slate-700 mt-14 mb-5 overflow-x-hidden"
-      style={{
-        minHeight: "calc(100vh - 4.75rem)",
-      }}
-    >
+    <main className="flex flex-col justify-around dark:bg-slate-700 pt-14 pb-5 overflow-x-hidden min-h-screen">
       <NavBar setTab={setTab} setTitle={setTitle} />
       <div className="flex flex-col items-center justify-around w-screen pb-6">
         {tab && title ? <TabDisplay tab={tab} title={title} /> : null}
