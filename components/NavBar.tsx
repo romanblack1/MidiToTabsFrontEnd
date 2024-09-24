@@ -45,7 +45,7 @@ export default function NavBar({ setTab, setTitle }: NavBarProps): JSX.Element {
       <Link className="text-xl font-normal text-center" href="/help">
         Getting Started/Help
       </Link>
-      <div className="flex flex-row text-2xl ml-auto font-semibold">
+      <div className="flex flex-row items-center text-2xl ml-auto font-semibold">
         <Link className="mr-4" href="/all_tabs">
           All Tabs
         </Link>

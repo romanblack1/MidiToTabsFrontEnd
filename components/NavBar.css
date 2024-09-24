@@ -2,7 +2,6 @@
     overflow: hidden;
     background-color: #d1d5db; /* bg-gray-200 */
     width: 100%; /* w-full */
-    height: 3rem; /* h-12 */
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 equal size columns */
     align-items: center; /* items-center */
@@ -11,7 +10,6 @@
     position: fixed; /* Set the navbar to fixed position */
     top: 0; /* Position the navbar at the top of the page */
     z-index: 10;
-  
 }
 
 /* For dark mode - Ensure your project is setup to handle media queries for dark mode */
