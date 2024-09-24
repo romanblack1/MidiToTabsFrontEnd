@@ -2,6 +2,7 @@
     overflow: hidden;
     background-color: #d1d5db; /* bg-gray-200 */
     width: 100%; /* w-full */
+    min-height: 3rem;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 equal size columns */
     align-items: center; /* items-center */
