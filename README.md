@@ -1,4 +1,5 @@
-This project is a website hosts the algorithm in my MidiToTabs project
+This project is a website hosts the algorithm in my MidiToTabs project.
+
 The website is found online at: https://midi-to-tabs.vercel.app/
 
 
