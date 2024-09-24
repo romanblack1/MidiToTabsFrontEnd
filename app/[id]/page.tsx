@@ -142,7 +142,7 @@ export default function Home() {
   return (
     <main className="flex flex-col dark:bg-slate-700 pt-14 pb-5 overflow-x-hidden min-h-screen">
       <NavBar />
-      <div className="flex flex-col items-center justify-around w-screen">
+      <div className="flex flex-col items-center justify-around w-full">
         <h1 className="font-bold text-3xl m-3">My Saved Tabs</h1>
 
         {loadingSavedTabs ? (
@@ -196,15 +196,15 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-3">
-              <span>Name</span>
-              <span>Created By</span>
+            <div className="grid grid-cols-5 gap-3 p-4">
+              <span className="col-span-2">Name</span>
+              <span className="col-span-2">Created By</span>
               <span className="ml-auto">Saved</span>
 
               {filteredSortedSavedTabs.map((savedTab) => (
                 <React.Fragment key={savedTab.tabs.id}>
                   <Link
-                    className=""
+                    className="col-span-2"
                     href="/"
                     onClick={() => {
                       localStorage.setItem("tabTitle", savedTab.tabs.name);
@@ -213,7 +213,7 @@ export default function Home() {
                   >
                     {savedTab.tabs.name}
                   </Link>
-                  <span>
+                  <span className="col-span-2">
                     {savedTab.tabs.created_by +
                       " on " +
                       formatDate(savedTab.tabs.created_at)}
